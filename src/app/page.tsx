@@ -361,14 +361,25 @@ export default function Home() {
           
           {/* Logo & Brand Header */}
           <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-rose-500 flex items-center justify-center mx-auto shadow-2xl shadow-indigo-500/30 border border-indigo-400/30">
-              <Tv className="w-9 h-9 text-white" />
+            <div className="relative inline-block">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-fuchsia-600 to-rose-500 p-[2px] shadow-2xl shadow-indigo-500/40 mx-auto">
+                <div className="w-full h-full bg-slate-950/90 rounded-[22px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer" />
+                  <Tv className="w-9 h-9 text-indigo-300 relative z-10" />
+                </div>
+              </div>
+              {/* Live green dot */}
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-950"></span>
+              </span>
             </div>
+
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-                STREAM<span className="text-indigo-400">RESELL</span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                STREAM<span className="bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-rose-400 bg-clip-text text-transparent font-black">RESELL</span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 flex items-center justify-center gap-1.5 font-medium">
                 Portal Mayorista B2B • Streaming, IPTV & Licencias
               </p>
             </div>
@@ -545,6 +556,7 @@ export default function Home() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenTopup={() => setIsTopupOpen(true)}
         onLogout={handleLogout}
+        onGoHome={() => setSellerActiveTab('catalog')}
       />
 
       {/* Purchase Notice Banner */}
