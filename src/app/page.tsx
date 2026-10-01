@@ -37,7 +37,7 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 
 export default function Home() {
   const [appState, setAppState] = useState<AppState>(getInitialState);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   
   // Tab State
