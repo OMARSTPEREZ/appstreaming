@@ -417,173 +417,84 @@ const INITIAL_PRODUCTS: Product[] = [
 ];
 
 // Initial Seed Inventory
+// Initial Seed Inventory for all real products
 const INITIAL_INVENTORY: InventoryItem[] = [
-  {
-    id: 'inv-01',
-    product_id: 'prod-01',
-    email: 'premium.vip.nf1@gmail.com',
-    password: 'PassStream2026!#',
-    profile_pin: '4821',
-    household_code: 'HTV-84920',
-    status: 'sold',
-    assigned_to: 'seller-101',
-    created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-  },
-  {
-    id: 'inv-02',
-    product_id: 'prod-01',
-    email: 'premium.vip.nf2@gmail.com',
-    password: 'PassStream2026!#',
-    profile_pin: '1904',
-    household_code: 'HTV-31294',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-03',
-    product_id: 'prod-01',
-    email: 'premium.vip.nf3@gmail.com',
-    password: 'PassStream2026!#',
-    profile_pin: '7723',
-    household_code: 'HTV-55109',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-04',
-    product_id: 'prod-02',
-    email: 'yt.fam.cuenta01@gmail.com',
-    password: 'YoutubePro#2026',
-    profile_pin: 'N/A',
-    household_code: 'N/A',
-    status: 'sold',
-    assigned_to: 'seller-101',
-    created_at: new Date(Date.now() - 10 * 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 10 * 86400000).toISOString(),
-  },
-  {
-    id: 'inv-05',
-    product_id: 'prod-02',
-    email: 'yt.fam.cuenta02@gmail.com',
-    password: 'YoutubePro#2026',
-    profile_pin: 'N/A',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-06',
-    product_id: 'prod-03',
-    email: 'disney.espn.acc1@outlook.com',
-    password: 'DisneyStarPass$26',
-    profile_pin: '3310',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-07',
-    product_id: 'prod-04',
-    email: 'prime.global3p@gmail.com',
-    password: 'AmazonFast2026!',
-    profile_pin: '8820',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-08',
-    product_id: 'prod-05',
-    email: 'max.platino.perfil1@gmail.com',
-    password: 'MaxPlatino#2026',
-    profile_pin: '5029',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-09',
-    product_id: 'prod-06',
-    email: 'spotify.hifi.vip1@gmail.com',
-    password: 'SpotiMusic2026$',
-    profile_pin: 'N/A',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-10',
-    product_id: 'prod-07',
-    email: 'combo.mega.stream1@gmail.com',
-    password: 'ComboPack#2026',
-    profile_pin: '9182',
-    household_code: 'HTV-99381',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'inv-11',
-    product_id: 'prod-08',
-    email: 'canva.agency.lic1@design.pro',
-    password: 'CanvaMagic#2026',
-    profile_pin: 'INVITE_LINK_PRO',
-    household_code: 'N/A',
-    status: 'available',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }
+  // Netflix
+  { id: 'inv-nf-01-a', product_id: 'nf-01', email: 'nf.original.vip1@streamresell.com', password: 'NfPass#2026!Orig', profile_pin: '4821', household_code: 'HTV-84920', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-01-b', product_id: 'nf-01', email: 'nf.original.vip2@streamresell.com', password: 'NfPass#2026!Orig', profile_pin: '1904', household_code: 'HTV-31294', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-01-c', product_id: 'nf-01', email: 'nf.original.vip3@streamresell.com', password: 'NfPass#2026!Orig', profile_pin: '7723', household_code: 'HTV-55109', status: 'sold', assigned_to: 'distribuidor-demo', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-02-a', product_id: 'nf-02', email: 'nf.usolibre.01@streamresell.com', password: 'NfLibre#2026!Pass', profile_pin: '1122', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-02-b', product_id: 'nf-02', email: 'nf.usolibre.02@streamresell.com', password: 'NfLibre#2026!Pass', profile_pin: '3344', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-03-a', product_id: 'nf-03', email: 'nf.extra.01@streamresell.com', password: 'NfExtra#2026!Pass', profile_pin: '9081', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-nf-04-a', product_id: 'nf-04', email: 'nf.std.01@streamresell.com', password: 'NfStd#2026!Pass', profile_pin: '5566', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  
+  // IPTV / Jellyfin / Emby / Win+
+  { id: 'inv-iptv-01-a', product_id: 'iptv-01', email: 'stella.tv.01@streamresell.com', password: 'StellaTV#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-iptv-01-b', product_id: 'iptv-01', email: 'stella.tv.02@streamresell.com', password: 'StellaTV#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-jf-01-a', product_id: 'jf-01', email: 'jellyfin.acc.01@streamresell.com', password: 'Jelly3D#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-jf-02-a', product_id: 'jf-02', email: 'jellyfin.1p.01@streamresell.com', password: 'Jelly1P#2026', profile_pin: '2211', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-jf-03-a', product_id: 'jf-03', email: 'jellyfin.canales.01@streamresell.com', password: 'JellyLive#2026', profile_pin: '7788', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-em-01-a', product_id: 'em-01', email: 'emby.canales.01@streamresell.com', password: 'EmbyLive#2026', profile_pin: '1234', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-em-02-a', product_id: 'em-02', email: 'emby.vod.01@streamresell.com', password: 'EmbyVod#2026', profile_pin: '5678', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-ip-01-a', product_id: 'ip-01', email: 'winplus.3d.01@streamresell.com', password: 'WinPlus3D#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-ip-02-a', product_id: 'ip-02', email: 'winplus.1d.01@streamresell.com', password: 'WinPlus1D#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-pl-01-a', product_id: 'pl-01', email: 'plex.4d.01@streamresell.com', password: 'PlexFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-pl-02-a', product_id: 'pl-02', email: 'plex.1d.01@streamresell.com', password: 'Plex1D#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // Disney+
+  { id: 'inv-dp-01-a', product_id: 'dp-01', email: 'disney.espn.orig1@streamresell.com', password: 'DisneyEspn#2026', profile_pin: '3310', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-dp-02-a', product_id: 'dp-02', email: 'disney.espn.1p1@streamresell.com', password: 'DisneyEspn1P#2026', profile_pin: '8841', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-dp-03-a', product_id: 'dp-03', email: 'disney.std.1p1@streamresell.com', password: 'DisneyStd#2026', profile_pin: '2299', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-dp-04-a', product_id: 'dp-04', email: 'disney.std.full1@streamresell.com', password: 'DisneyFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // Prime Video
+  { id: 'inv-pv-01-a', product_id: 'pv-01', email: 'prime.full.01@streamresell.com', password: 'PrimeFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-pv-02-a', product_id: 'pv-02', email: 'prime.orig.01@streamresell.com', password: 'PrimeOrig#2026', profile_pin: '4412', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-pv-03-a', product_id: 'pv-03', email: 'prime.1p.01@streamresell.com', password: 'Prime1P#2026', profile_pin: '9901', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // HBO Max
+  { id: 'inv-hbo-01-a', product_id: 'hbo-01', email: 'hbo.full.01@streamresell.com', password: 'HboFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-hbo-02-a', product_id: 'hbo-02', email: 'hbo.1p.01@streamresell.com', password: 'Hbo1P#2026', profile_pin: '5029', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // Paramount+
+  { id: 'inv-pp-01-a', product_id: 'pp-01', email: 'paramount.full.01@streamresell.com', password: 'ParamountFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-pp-02-a', product_id: 'pp-02', email: 'paramount.1p.01@streamresell.com', password: 'Paramount1P#2026', profile_pin: '1092', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // Crunchyroll
+  { id: 'inv-cr-01-a', product_id: 'cr-01', email: 'crunchy.full.01@streamresell.com', password: 'CrunchyFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-cr-02-a', product_id: 'cr-02', email: 'crunchy.1p.01@streamresell.com', password: 'Crunchy1P#2026', profile_pin: '7731', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // ViX
+  { id: 'inv-vx-01-a', product_id: 'vx-01', email: 'vix.full.01@streamresell.com', password: 'VixFull#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-vx-02-a', product_id: 'vx-02', email: 'vix.1p.01@streamresell.com', password: 'Vix1P#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+
+  // Música & Vídeo
+  { id: 'inv-yt-01-a', product_id: 'yt-01', email: 'yt.premium.01@streamresell.com', password: 'YoutubePro#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-sp-01-a', product_id: 'sp-01', email: 'spotify.1m.01@streamresell.com', password: 'SpotiMusic1M#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'inv-sp-02-a', product_id: 'sp-02', email: 'spotify.3m.01@streamresell.com', password: 'SpotiMusic3M#2026', profile_pin: 'N/A', household_code: 'N/A', status: 'available', created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
 ];
 
 // Initial Seed Sales
 const INITIAL_SALES: Sale[] = [
   {
     id: 'sale-01',
-    seller_id: 'seller-101',
-    inventory_id: 'inv-01',
-    product_id: 'prod-01',
-    product_name: 'Netflix Perfil 4K Ultra HD',
-    product_brand: 'Netflix',
+    seller_id: 'distribuidor-demo',
+    inventory_id: 'inv-nf-01-c',
+    product_id: 'nf-01',
+    product_name: 'Netflix 4K Original — 1 Pantalla',
+    product_brand: 'Netflix Original',
     brand_color: '#E50914',
-    cost_price: 8500,
-    sale_price: 12000,
-    suggested_price: 18000,
-    profit: 3500,
-    account_email: 'premium.vip.nf1@gmail.com',
-    account_password: 'PassStream2026!#',
-    profile_pin: '4821',
-    household_code: 'HTV-84920',
+    cost_price: 13000,
+    sale_price: 16000,
+    suggested_price: 20000,
+    profit: 3000,
+    account_email: 'nf.original.vip3@streamresell.com',
+    account_password: 'NfPass#2026!Orig',
+    profile_pin: '7723',
+    household_code: 'HTV-55109',
     status: 'active',
-    purchased_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-    expires_at: new Date(Date.now() + 25 * 86400000).toISOString(),
-  },
-  {
-    id: 'sale-02',
-    seller_id: 'seller-101',
-    inventory_id: 'inv-04',
-    product_id: 'prod-02',
-    product_name: 'YouTube Premium Anual / Mensual',
-    product_brand: 'YouTube',
-    brand_color: '#FF0000',
-    cost_price: 6000,
-    sale_price: 9500,
-    suggested_price: 16000,
-    profit: 3500,
-    account_email: 'yt.fam.cuenta01@gmail.com',
-    account_password: 'YoutubePro#2026',
-    profile_pin: 'N/A',
-    household_code: 'N/A',
-    status: 'active',
-    purchased_at: new Date(Date.now() - 10 * 86400000).toISOString(),
-    expires_at: new Date(Date.now() + 20 * 86400000).toISOString(),
+    purchased_at: new Date(Date.now() - 3 * 86400000).toISOString(),
+    expires_at: new Date(Date.now() + 27 * 86400000).toISOString(),
   }
 ];
 
@@ -591,25 +502,14 @@ const INITIAL_SALES: Sale[] = [
 const INITIAL_TOPUPS: Topup[] = [
   {
     id: 'topup-01',
-    seller_id: 'seller-101',
-    seller_name: 'Carlos Mendoza (Revendedor VIP)',
-    amount: 200000,
+    seller_id: 'distribuidor-demo',
+    seller_name: 'Distribuidora Streaming Colombia SAS (Demo VIP)',
+    amount: 250000,
     payment_gateway: 'wompi',
     transaction_id: 'WMP-9842187-TX',
     status: 'approved',
-    created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-    approved_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-  },
-  {
-    id: 'topup-02',
-    seller_id: 'seller-101',
-    seller_name: 'Carlos Mendoza (Revendedor VIP)',
-    amount: 100000,
-    payment_gateway: 'pse',
-    transaction_id: 'PSE-1092837-COL',
-    status: 'approved',
-    created_at: new Date(Date.now() - 15 * 86400000).toISOString(),
-    approved_at: new Date(Date.now() - 15 * 86400000).toISOString(),
+    created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+    approved_at: new Date(Date.now() - 2 * 86400000).toISOString(),
   }
 ];
 
@@ -617,19 +517,19 @@ const INITIAL_TOPUPS: Topup[] = [
 const INITIAL_TICKETS: SupportTicket[] = [
   {
     id: 'ticket-01',
-    sale_id: 'sale-02',
-    seller_id: 'seller-101',
-    seller_name: 'Carlos Mendoza',
-    product_name: 'YouTube Premium',
-    account_email: 'yt.fam.cuenta01@gmail.com',
+    sale_id: 'sale-01',
+    seller_id: 'distribuidor-demo',
+    seller_name: 'Distribuidora Streaming Colombia SAS',
+    product_name: 'Netflix 4K Original — 1 Pantalla',
+    account_email: 'nf.original.vip3@streamresell.com',
     issue_type: 'caida_clave',
-    description: 'El cliente indica que le aparece aviso de renovar membresía.',
+    description: 'Solicitud de verificación de código hogar.',
     status: 'open',
     created_at: new Date(Date.now() - 2 * 3600000).toISOString(),
   }
 ];
 
-const LOCAL_STORAGE_KEY = 'STREAMRESELL_B2B_DATA_V1';
+export const LOCAL_STORAGE_KEY = 'STREAMRESELL_B2B_DATA_V5_NTO';
 
 export interface AppState {
   currentRole: 'seller' | 'superadmin';
@@ -643,52 +543,44 @@ export interface AppState {
   cart: CartItem[];
 }
 
+export const getInitialState = (): AppState => ({
+  currentRole: 'seller',
+  currentSeller: INITIAL_PROFILES[0],
+  profiles: INITIAL_PROFILES,
+  products: INITIAL_PRODUCTS,
+  inventory: INITIAL_INVENTORY,
+  sales: INITIAL_SALES,
+  topups: INITIAL_TOPUPS,
+  tickets: INITIAL_TICKETS,
+  cart: [],
+});
+
 export const getStoredData = (): AppState => {
   if (typeof window === 'undefined') {
-    return {
-      currentRole: 'seller',
-      currentSeller: INITIAL_PROFILES[0],
-      profiles: INITIAL_PROFILES,
-      products: INITIAL_PRODUCTS,
-      inventory: INITIAL_INVENTORY,
-      sales: INITIAL_SALES,
-      topups: INITIAL_TOPUPS,
-      tickets: INITIAL_TICKETS,
-      cart: [],
-    };
+    return getInitialState();
   }
 
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (!raw) {
-      const initial: AppState = {
-        currentRole: 'seller',
-        currentSeller: INITIAL_PROFILES[0],
-        profiles: INITIAL_PROFILES,
-        products: INITIAL_PRODUCTS,
-        inventory: INITIAL_INVENTORY,
-        sales: INITIAL_SALES,
-        topups: INITIAL_TOPUPS,
-        tickets: INITIAL_TICKETS,
-        cart: [],
-      };
+    if (!raw || raw.trim() === '') {
+      const initial = getInitialState();
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initial));
       return initial;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.products) || parsed.products.length === 0) {
+      const initial = getInitialState();
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initial));
+      return initial;
+    }
+    return parsed;
   } catch (err) {
-    console.error('Error loading stored state:', err);
-    return {
-      currentRole: 'seller',
-      currentSeller: INITIAL_PROFILES[0],
-      profiles: INITIAL_PROFILES,
-      products: INITIAL_PRODUCTS,
-      inventory: INITIAL_INVENTORY,
-      sales: INITIAL_SALES,
-      topups: INITIAL_TOPUPS,
-      tickets: INITIAL_TICKETS,
-      cart: [],
-    };
+    console.error('Error loading stored state, resetting to initial state:', err);
+    const initial = getInitialState();
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initial));
+    } catch {}
+    return initial;
   }
 };
 

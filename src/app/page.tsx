@@ -58,8 +58,12 @@ export default function Home() {
 
   // Load state on mount
   useEffect(() => {
-    const data = getStoredData();
-    setAppState(data);
+    try {
+      const data = getStoredData();
+      setAppState(data);
+    } catch (err) {
+      console.error('Error initializing state:', err);
+    }
   }, []);
 
   // Sync state to LocalStorage on updates
