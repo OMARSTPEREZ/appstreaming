@@ -14,6 +14,15 @@ import {
 // Mock Seed Profiles
 const INITIAL_PROFILES: Profile[] = [
   {
+    id: 'distribuidor-demo',
+    email: 'distribuidor.demo@streamresell.com',
+    full_name: 'Distribuidora Streaming Colombia SAS (Demo VIP)',
+    role: 'seller',
+    balance: 250000,
+    phone: '+57 312 456 7890',
+    created_at: new Date().toISOString(),
+  },
+  {
     id: 'seller-101',
     email: 'vendedor@streamresell.com',
     full_name: 'Carlos Mendoza (Revendedor VIP)',

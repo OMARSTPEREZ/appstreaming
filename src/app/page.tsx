@@ -514,7 +514,7 @@ export default function Home() {
             </div>
 
             {/* Quick Demo Access Buttons */}
-            <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+            <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2.5">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block text-center">
                 🚀 Acceso Rápido Demostrativo (1-Clic):
               </span>
@@ -525,7 +525,7 @@ export default function Home() {
                   className="py-2.5 px-3 rounded-xl bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/40 text-indigo-200 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
                 >
                   <Zap className="w-3.5 h-3.5 text-indigo-400" />
-                  Panel Revendedor
+                  Distribuidor Demo
                 </button>
                 <button
                   type="button"
@@ -535,6 +535,19 @@ export default function Home() {
                   <Shield className="w-3.5 h-3.5 text-rose-400" />
                   SuperAdmin Master
                 </button>
+              </div>
+
+              {/* Click-to-fill credential helper */}
+              <div 
+                onClick={() => {
+                  setAuthEmail('distribuidor.demo@streamresell.com');
+                  setAuthPassword('Demo1234!');
+                  setAuthTab('login');
+                }}
+                className="cursor-pointer text-[10px] text-slate-400 hover:text-indigo-300 p-2 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between transition group"
+              >
+                <span>🔑 <strong className="text-slate-300">distribuidor.demo@streamresell.com</strong></span>
+                <span className="text-indigo-400 font-semibold group-hover:underline">Autocompletar</span>
               </div>
             </div>
 
