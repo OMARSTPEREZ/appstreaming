@@ -14,8 +14,8 @@ ALTER TABLE products
   ADD COLUMN IF NOT EXISTS features     TEXT[]  DEFAULT '{}',
   ADD COLUMN IF NOT EXISTS is_active    BOOLEAN DEFAULT true;
 
--- 2. Limpiar productos anteriores de demo
-DELETE FROM products WHERE id LIKE 'demo-%' OR name LIKE '%Mock%';
+-- 2. Limpiar productos anteriores de demo (usando casting a text para columnas UUID)
+DELETE FROM products WHERE id::text LIKE 'demo-%' OR name ILIKE '%mock%' OR name ILIKE '%demo%';
 
 -- 3. Insertar catálogo real N.T.O.
 -- ============================================================
