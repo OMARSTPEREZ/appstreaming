@@ -16,7 +16,8 @@ import {
   Sparkles,
   Smartphone,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  ArrowUpRight
 } from 'lucide-react';
 import { PaymentGateway } from '@/lib/types';
 
@@ -62,7 +63,7 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
   const PAYMENT_PHONE = '312 456 7890';
   const PAYMENT_NAME = 'PosiUp Streaming Colombia S.A.S';
 
-  // Branding configuration per gateway
+  // Branding configuration & Redirect URLs per gateway
   const gatewayConfig = {
     nequi: {
       name: 'Nequi Directo',
@@ -70,8 +71,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30',
       brandGradient: 'from-fuchsia-600 to-pink-600',
       accentText: 'text-fuchsia-400',
-      subtext: 'Envía desde tu app Nequi escaneando el código o al celular directo.',
-      directType: 'Celular Nequi'
+      subtext: 'Envía desde tu app Nequi o portal de recargas directo.',
+      directType: 'Celular Nequi',
+      redirectUrl: 'https://recarga.nequi.com.co/',
+      appActionText: 'Abrir App Nequi / Portal de Pago'
     },
     daviplata: {
       name: 'Daviplata Directo',
@@ -79,8 +82,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
       brandGradient: 'from-rose-600 to-red-600',
       accentText: 'text-rose-400',
-      subtext: 'Pasa plata desde tu app Daviplata usando el número de celular o escaneando.',
-      directType: 'Número Daviplata'
+      subtext: 'Pasa plata desde tu app Daviplata o portal de pagos.',
+      directType: 'Número Daviplata',
+      redirectUrl: 'https://portal.daviplata.com/',
+      appActionText: 'Abrir App Daviplata / Portal de Pago'
     },
     pse: {
       name: 'PSE Débito en Línea',
@@ -88,8 +93,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
       brandGradient: 'from-emerald-600 to-teal-600',
       accentText: 'text-emerald-400',
-      subtext: 'Débito seguro desde cualquier cuenta de ahorros o corriente de Colombia.',
-      directType: 'Pasarela PSE'
+      subtext: 'Débito seguro desde cualquier banco de Colombia.',
+      directType: 'Pasarela PSE',
+      redirectUrl: 'https://registro.pse.com.co/',
+      appActionText: 'Ir a la Pasarela Oficial PSE'
     },
     llave: {
       name: 'Llave / Transfiya (Bre-B)',
@@ -97,8 +104,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
       brandGradient: 'from-indigo-600 to-blue-600',
       accentText: 'text-indigo-400',
-      subtext: 'Transferencia interbancaria inmediata con Llave o Transfiya sin costo.',
-      directType: 'Llave Celular'
+      subtext: 'Transferencia interbancaria inmediata con Llave o Transfiya.',
+      directType: 'Llave Celular',
+      redirectUrl: 'https://www.transfiya.com.co/',
+      appActionText: 'Abrir Transfiya / Bre-B'
     },
     wompi: {
       name: 'Wompi Bancolombia',
@@ -107,7 +116,9 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-indigo-600 to-purple-600',
       accentText: 'text-indigo-400',
       subtext: 'Pasarela oficial Bancolombia.',
-      directType: 'Cuenta de Ahorros'
+      directType: 'Cuenta de Ahorros',
+      redirectUrl: 'https://checkout.wompi.co/',
+      appActionText: 'Ir a Pasarela Wompi'
     },
     bancolombia: {
       name: 'Bancolombia Directo',
@@ -115,8 +126,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
       brandGradient: 'from-amber-600 to-yellow-600',
       accentText: 'text-amber-400',
-      subtext: 'Transferencia directa o QR Bancolombia.',
-      directType: 'Cuenta Bancolombia'
+      subtext: 'Transferencia directa o App Bancolombia.',
+      directType: 'Cuenta Bancolombia',
+      redirectUrl: 'https://www.bancolombia.com/personas',
+      appActionText: 'Abrir Sucursal Virtual Bancolombia'
     },
     binance_usdt: {
       name: 'Binance Pay USDT',
@@ -125,7 +138,9 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-yellow-600 to-amber-600',
       accentText: 'text-yellow-400',
       subtext: 'Pago cripto USDT TRC20 / BEP20.',
-      directType: 'Binance Pay ID'
+      directType: 'Binance Pay ID',
+      redirectUrl: 'https://pay.binance.com/',
+      appActionText: 'Abrir Binance Pay'
     },
     manual: {
       name: 'Transferencia Manual',
@@ -134,7 +149,9 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-slate-600 to-slate-700',
       accentText: 'text-slate-300',
       subtext: 'Comprobante manual validado por soporte.',
-      directType: 'Comprobante'
+      directType: 'Comprobante',
+      redirectUrl: 'https://wa.me/573124567890',
+      appActionText: 'Enviar Comprobante WhatsApp'
     }
   }[gateway] || {
     name: 'Pago Directo',
@@ -143,7 +160,9 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
     brandGradient: 'from-indigo-600 to-purple-600',
     accentText: 'text-indigo-400',
     subtext: 'Acreditación instantánea 24/7.',
-    directType: 'Cuenta'
+    directType: 'Cuenta',
+    redirectUrl: 'https://recarga.nequi.com.co/',
+    appActionText: 'Abrir App de Pago'
   };
 
   // Generate unique dynamic reference and QR code on open
@@ -219,6 +238,13 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
     setTimeout(() => setCopiedPhone(false), 2000);
   };
 
+  // Direct Redirection to payment App / Portal
+  const handleDirectRedirect = () => {
+    if (typeof window !== 'undefined') {
+      window.open(gatewayConfig.redirectUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   // Simular pago escaneado / Webhook de Pasarela
   const handleSimulateScanAndPay = () => {
     setSimulatingWebhook(true);
@@ -291,6 +317,16 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
               </div>
             </div>
 
+            {/* BOTÓN PRINCIPAL DE REDIRECCIÓN DIRECTA A LA APP / PORTAL */}
+            <button
+              type="button"
+              onClick={handleDirectRedirect}
+              className={`w-full py-3.5 px-4 rounded-2xl font-bold text-sm bg-gradient-to-r ${gatewayConfig.brandGradient} hover:opacity-95 text-white transition shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2 cursor-pointer transform hover:scale-[1.01] active:scale-95`}
+            >
+              <span>{gatewayConfig.appActionText}</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </button>
+
             {/* SECCIÓN ESPECÍFICA SEGÚN MÉTODO */}
             {gateway === 'pse' ? (
               <div className="space-y-3 text-left">
@@ -357,21 +393,21 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
               </div>
             )}
 
-            {/* QR Code Container */}
-            <div className="p-4 rounded-2xl bg-white flex flex-col items-center justify-center shadow-inner mx-auto max-w-[240px]">
+            {/* QR Code Container para escanear si está en PC */}
+            <div className="p-3.5 rounded-2xl bg-white flex flex-col items-center justify-center shadow-inner mx-auto max-w-[210px]">
               {qrDataUrl ? (
                 <img
                   src={qrDataUrl}
                   alt={`QR ${gatewayConfig.name}`}
-                  className="w-44 h-44 rounded-lg shadow-sm"
+                  className="w-36 h-36 rounded-lg shadow-sm"
                 />
               ) : (
-                <div className="w-44 h-44 flex items-center justify-center text-slate-400 text-xs">
+                <div className="w-36 h-36 flex items-center justify-center text-slate-400 text-xs">
                   Generando QR...
                 </div>
               )}
-              <span className="text-[9px] font-bold text-slate-800 mt-2 font-mono uppercase tracking-wide">
-                Escanea desde tu App {gatewayConfig.shortName}
+              <span className="text-[9px] font-bold text-slate-800 mt-1 font-mono uppercase tracking-wide">
+                O Escanea desde tu App {gatewayConfig.shortName}
               </span>
             </div>
 
@@ -391,22 +427,22 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
               </button>
             </div>
 
-            {/* Botón Simular Escaneo & Webhook */}
+            {/* Botón Acreditar Saldo Inmediato */}
             <button
               type="button"
               onClick={handleSimulateScanAndPay}
               disabled={simulatingWebhook}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-xs bg-gradient-to-r ${gatewayConfig.brandGradient} hover:opacity-95 text-white transition shadow-lg flex items-center justify-center gap-2 cursor-pointer`}
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 transition shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               {simulatingWebhook ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
                   Verificando acreditación con {gatewayConfig.shortName}...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
-                  Simular Pago y Acreditar Saldo Inmediato
+                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  Simular Pago y Acreditar Saldo Inmediatamente
                 </>
               )}
             </button>

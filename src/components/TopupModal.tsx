@@ -197,9 +197,9 @@ export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfi
               <button
                 type="button"
                 onClick={handleOpenQr}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30 cursor-pointer"
               >
-                Generar QR de Pago
+                Continuar a Pago & Redirigir a App
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

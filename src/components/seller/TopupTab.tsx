@@ -206,10 +206,11 @@ export const TopupTab: React.FC<TopupTabProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={handleOpenQr}
-            className="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer"
           >
-            Generar QR Dinámico de ${amount.toLocaleString('es-CO')} COP
+            Continuar a Pago & Redirigir a App (${amount.toLocaleString('es-CO')} COP)
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
