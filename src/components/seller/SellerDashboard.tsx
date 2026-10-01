@@ -36,23 +36,14 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   topups,
   inventoryCounts,
   currentBalance,
-  activeTab: propActiveTab,
+  activeTab = 'catalog',
   onTabChange,
   onAddToCart,
   onOpenHouseholdCode,
   onOpenReportIssue,
   onProcessTopup,
 }) => {
-  const [activeTab, setActiveTab] = useState<'catalog' | 'sales' | 'topups'>(propActiveTab || 'catalog');
-
-  useEffect(() => {
-    if (propActiveTab && propActiveTab !== activeTab) {
-      setActiveTab(propActiveTab);
-    }
-  }, [propActiveTab]);
-
   const handleTabClick = (tab: 'catalog' | 'sales' | 'topups') => {
-    setActiveTab(tab);
     if (onTabChange) {
       onTabChange(tab);
     }
@@ -67,8 +58,9 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
       <div className="flex items-center justify-between border-b border-slate-800 pb-4 overflow-x-auto gap-4">
         <div className="flex items-center gap-2 p-1 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-inner">
           <button
+            type="button"
             onClick={() => handleTabClick('catalog')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap cursor-pointer ${
               activeTab === 'catalog'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -79,8 +71,9 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() => handleTabClick('sales')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap cursor-pointer ${
               activeTab === 'sales'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -96,8 +89,9 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() => handleTabClick('topups')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap cursor-pointer ${
               activeTab === 'topups'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'

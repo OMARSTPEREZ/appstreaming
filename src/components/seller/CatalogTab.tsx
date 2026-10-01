@@ -379,8 +379,16 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-wrap">
           {CATEGORIES.map((cat) => (
-            <button key={cat} onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap border transition ${selectedCategory === cat ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/30' : 'bg-slate-900/70 border-slate-800 text-slate-400 hover:text-slate-200'}`}>
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap border transition cursor-pointer ${
+                selectedCategory === cat
+                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/30'
+                  : 'bg-slate-900/70 border-slate-800 text-slate-400 hover:text-slate-200'
+              }`}
+            >
               {cat}
             </button>
           ))}
@@ -439,7 +447,10 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
 
               {/* Card body */}
               <div className="flex flex-col flex-1 p-3 space-y-2">
-                <h3 className="font-bold text-[11px] text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition">
+                <h3 
+                  onClick={() => setDetailProduct(prod)}
+                  className="font-bold text-[11px] text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition cursor-pointer"
+                >
                   {prod.name}
                 </h3>
                 <span className="text-[9px] text-slate-500 flex items-center gap-1">
@@ -458,15 +469,17 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
                 {/* Buttons */}
                 <div className="flex gap-1.5 pt-1">
                   <button
+                    type="button"
                     onClick={() => setDetailProduct(prod)}
-                    className="flex-1 py-2 rounded-xl text-[10px] font-semibold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 transition flex items-center justify-center gap-1"
+                    className="flex-1 py-2 rounded-xl text-[10px] font-semibold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 transition flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <Info className="w-3 h-3" /> Detalle
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleAdd(prod)}
                     disabled={stock === 0}
-                    className={`flex-[2] py-2 rounded-xl font-bold text-[10px] flex items-center justify-center gap-1 transition ${stock === 0 ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed' : isAdded ? 'bg-emerald-600 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'}`}
+                    className={`flex-[2] py-2 rounded-xl font-bold text-[10px] flex items-center justify-center gap-1 transition cursor-pointer ${stock === 0 ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed' : isAdded ? 'bg-emerald-600 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'}`}
                   >
                     {isAdded ? <><Check className="w-3 h-3" /> Listo</> : <><ShoppingCart className="w-3 h-3" /> {stock === 0 ? 'Agotado' : 'Carrito'}</>}
                   </button>
