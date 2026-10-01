@@ -5,7 +5,7 @@ import {
   Search, ShoppingCart, Check, Sparkles, Flame, Tv, Film, Youtube,
   Music, Laptop, TrendingUp, PackageCheck, Info, ChevronUp,
   ShieldCheck, Lock, Star, Clock, X, Monitor, PlayCircle,
-  Wifi, Radio, Headphones, Zap
+  Wifi, Radio, Headphones, Zap, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { Product, ProductCategory } from '@/lib/types';
 
@@ -315,17 +315,36 @@ const DetailOverlay: React.FC<OverlayProps> = ({ product, stock, isAdded, onClos
 };
 
 // ── Main Component ─────────────────────────────────────────────────────────
+// ── Main Component ─────────────────────────────────────────────────────────
 export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCounts, onAddToCart }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [searchQuery, setSearchQuery] = useState('');
   const [addedId, setAddedId] = useState<string | null>(null);
   const [detailProduct, setDetailProduct] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const ITEMS_PER_PAGE = 9; // 3x3 = 9 productos por página
+
+  // Reset page to 1 when filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
 
   const filtered = products.filter((p) => {
     const matchCat = selectedCategory === 'Todas' || p.category === selectedCategory;
     const matchQ = [p.name, p.brand, p.description].join(' ').toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchQ;
   });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentProducts = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
 
   const handleAdd = (product: Product) => {
     onAddToCart(product);
@@ -334,7 +353,7 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
 
       {/* ── Banner 24/7 Automatizado ───────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900/80 border border-emerald-500/20 text-xs">
@@ -366,7 +385,7 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
       </div>
 
       {/* ── Search & Filters ─────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
           <input
@@ -395,9 +414,9 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
         </div>
       </div>
 
-      {/* ── Product Grid ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        {filtered.map((prod) => {
+      {/* ── Product Grid 3x3 (3 columnas x 3 filas) ────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {currentProducts.map((prod) => {
           const stock = inventoryCounts[prod.id] ?? 0;
           const isAdded = addedId === prod.id;
           const profit = prod.suggested_price - prod.reseller_price;
@@ -407,11 +426,11 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
           return (
             <div
               key={prod.id}
-              className="glass-panel rounded-2xl border border-slate-800 overflow-hidden flex flex-col group transition-all duration-200 hover:border-slate-600 hover:-translate-y-0.5"
+              className="glass-panel rounded-2xl border border-slate-800 overflow-hidden flex flex-col group transition-all duration-200 hover:border-slate-600 hover:-translate-y-1 shadow-lg hover:shadow-indigo-500/10"
             >
               {/* Visual banner */}
               <div
-                className="relative h-28 flex flex-col items-center justify-center overflow-hidden cursor-pointer"
+                className="relative h-32 flex flex-col items-center justify-center overflow-hidden cursor-pointer"
                 style={{ background: cfg.gradient }}
                 onClick={() => setDetailProduct(prod)}
               >
@@ -421,67 +440,91 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
 
                 {/* Badge */}
                 {cfg.badge && (
-                  <span className="absolute top-2 left-2 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full bg-black/60 text-white border border-white/20 leading-tight">
+                  <span className="absolute top-2.5 left-2.5 text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-black/60 text-white border border-white/20 leading-tight">
                     {cfg.badge}
                   </span>
                 )}
 
                 {/* Stock badge */}
-                <span className={`absolute top-2 right-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold border flex items-center gap-1 ${stock > 0 ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-400' : 'bg-rose-950/80 border-rose-500/50 text-rose-400'}`}>
-                  <span className={`w-1 h-1 rounded-full ${stock > 0 ? 'bg-emerald-400 animate-ping' : 'bg-rose-400'}`} />
-                  {stock > 0 ? stock : '0'}
+                <span className={`absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${stock > 0 ? 'bg-emerald-950/85 border-emerald-500/50 text-emerald-400' : 'bg-rose-950/85 border-rose-500/50 text-rose-400'}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${stock > 0 ? 'bg-emerald-400 animate-ping' : 'bg-rose-400'}`} />
+                  {stock > 0 ? `${stock} disp.` : 'Agotado'}
                 </span>
 
                 {/* Brand icon */}
                 <div className="relative z-10">
-                  <div className="p-2.5 rounded-2xl border" style={{ background: cfg.accent + '20', borderColor: cfg.accent + '45', boxShadow: `0 0 18px ${cfg.glow}` }}>
-                    {getBrandIcon(prod.brand)}
+                  <div className="p-3 rounded-2xl border" style={{ background: cfg.accent + '20', borderColor: cfg.accent + '45', boxShadow: `0 0 20px ${cfg.glow}` }}>
+                    {getBrandIcon(prod.brand, 'w-10 h-10')}
                   </div>
                 </div>
 
                 {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <span className="text-white text-[10px] font-bold bg-black/60 px-2.5 py-1 rounded-full">Ver Detalle</span>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span className="text-white text-xs font-bold bg-black/70 px-3 py-1.5 rounded-full border border-white/20 shadow-md">
+                    Ver Detalles Completos
+                  </span>
                 </div>
               </div>
 
               {/* Card body */}
-              <div className="flex flex-col flex-1 p-3 space-y-2">
-                <h3 
-                  onClick={() => setDetailProduct(prod)}
-                  className="font-bold text-[11px] text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition cursor-pointer"
-                >
-                  {prod.name}
-                </h3>
-                <span className="text-[9px] text-slate-500 flex items-center gap-1">
-                  <Clock className="w-2.5 h-2.5" /> {prod.duration_days} días
-                </span>
+              <div className="flex flex-col flex-1 p-4 space-y-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 
+                    onClick={() => setDetailProduct(prod)}
+                    className="font-bold text-sm text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition cursor-pointer"
+                  >
+                    {prod.name}
+                  </h3>
+                  <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800 flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-indigo-400" /> {prod.duration_days}d
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                  {prod.description}
+                </p>
 
                 {/* Price + margin */}
-                <div className="flex items-baseline justify-between mt-auto pt-1">
-                  <span className="text-sm font-mono font-extrabold text-white">
-                    ${prod.reseller_price.toLocaleString('es-CO')}
-                    <span className="text-[9px] font-normal text-slate-500 ml-0.5">COP</span>
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-400">+{profitPct}%</span>
+                <div className="flex items-baseline justify-between mt-auto pt-2 border-t border-slate-800/80">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">Precio Mayorista:</span>
+                    <span className="text-lg font-mono font-extrabold text-white">
+                      ${prod.reseller_price.toLocaleString('es-CO')}
+                      <span className="text-[10px] font-normal text-slate-400 ml-1">COP</span>
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">Margen:</span>
+                    <span className="text-xs font-mono font-bold text-emerald-400">+{profitPct}%</span>
+                  </div>
                 </div>
 
                 {/* Buttons */}
-                <div className="flex gap-1.5 pt-1">
+                <div className="flex gap-2 pt-1">
                   <button
                     type="button"
                     onClick={() => setDetailProduct(prod)}
-                    className="flex-1 py-2 rounded-xl text-[10px] font-semibold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 transition flex items-center justify-center gap-1 cursor-pointer"
+                    className="flex-1 py-2.5 rounded-xl text-xs font-semibold border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 bg-slate-900/80 hover:bg-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <Info className="w-3 h-3" /> Detalle
+                    <Info className="w-3.5 h-3.5" /> Detalle
                   </button>
                   <button
                     type="button"
                     onClick={() => handleAdd(prod)}
                     disabled={stock === 0}
-                    className={`flex-[2] py-2 rounded-xl font-bold text-[10px] flex items-center justify-center gap-1 transition cursor-pointer ${stock === 0 ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed' : isAdded ? 'bg-emerald-600 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'}`}
+                    className={`flex-[2] py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-md ${
+                      stock === 0 
+                        ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed' 
+                        : isAdded 
+                          ? 'bg-emerald-600 text-white shadow-emerald-600/30' 
+                          : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30 active:scale-95'
+                    }`}
                   >
-                    {isAdded ? <><Check className="w-3 h-3" /> Listo</> : <><ShoppingCart className="w-3 h-3" /> {stock === 0 ? 'Agotado' : 'Carrito'}</>}
+                    {isAdded ? (
+                      <><Check className="w-3.5 h-3.5" /> ¡Agregado!</>
+                    ) : (
+                      <><ShoppingCart className="w-3.5 h-3.5" /> {stock === 0 ? 'Sin Stock' : 'Al Carrito'}</>
+                    )}
                   </button>
                 </div>
               </div>
@@ -495,6 +538,65 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
           <PackageCheck className="w-10 h-10 mx-auto text-slate-700" />
           <p className="font-semibold text-sm">No se encontraron productos</p>
           <p className="text-xs">Prueba con otra categoría o limpia la búsqueda.</p>
+        </div>
+      )}
+
+      {/* ── Controles de Paginación Dinámica (1, 2, 3, etc.) ───────── */}
+      {totalPages > 1 && (
+        <div className="pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800">
+          <div className="text-xs text-slate-400">
+            Mostrando <strong className="text-white font-mono">{startIndex + 1}</strong> – <strong className="text-white font-mono">{Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</strong> de <strong className="text-white font-mono">{filtered.length}</strong> productos
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {/* Botón Anterior */}
+            <button
+              type="button"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold border flex items-center gap-1 transition ${
+                currentPage === 1
+                  ? 'bg-slate-900/50 border-slate-800/80 text-slate-600 cursor-not-allowed'
+                  : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 cursor-pointer'
+              }`}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Anterior</span>
+            </button>
+
+            {/* Números de página: 1, 2, 3, 4 ... */}
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  type="button"
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`w-9 h-9 rounded-xl text-xs font-bold border transition flex items-center justify-center cursor-pointer ${
+                    currentPage === pageNum
+                      ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-600/40 font-black'
+                      : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+            </div>
+
+            {/* Botón Siguiente */}
+            <button
+              type="button"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold border flex items-center gap-1 transition ${
+                currentPage === totalPages
+                  ? 'bg-slate-900/50 border-slate-800/80 text-slate-600 cursor-not-allowed'
+                  : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 cursor-pointer'
+              }`}
+            >
+              <span className="hidden sm:inline">Siguiente</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 
