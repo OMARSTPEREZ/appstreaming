@@ -36,14 +36,23 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   topups,
   inventoryCounts,
   currentBalance,
-  activeTab = 'catalog',
+  activeTab: propActiveTab = 'catalog',
   onTabChange,
   onAddToCart,
   onOpenHouseholdCode,
   onOpenReportIssue,
   onProcessTopup,
 }) => {
+  const [activeTab, setActiveTab] = useState<'catalog' | 'sales' | 'topups'>(propActiveTab);
+
+  useEffect(() => {
+    if (propActiveTab) {
+      setActiveTab(propActiveTab);
+    }
+  }, [propActiveTab]);
+
   const handleTabClick = (tab: 'catalog' | 'sales' | 'topups') => {
+    setActiveTab(tab);
     if (onTabChange) {
       onTabChange(tab);
     }
