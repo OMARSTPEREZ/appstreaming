@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { 
   CreditCard, 
   X, 
-  CheckCircle2, 
   Building, 
   QrCode, 
   Wallet, 
@@ -13,11 +12,12 @@ import {
   Sparkles
 } from 'lucide-react';
 import { PaymentGateway } from '@/lib/types';
+import { DynamicQrModal } from './DynamicQrModal';
 
 interface TopupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirmTopup: (amount: number, gateway: PaymentGateway) => void;
+  onConfirmTopup: (amount: number, gateway: PaymentGateway, reference?: string) => void;
 }
 
 const PRESET_AMOUNTS = [50000, 100000, 200000, 500000];
@@ -25,70 +25,37 @@ const PRESET_AMOUNTS = [50000, 100000, 200000, 500000];
 export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfirmTopup }) => {
   const [amount, setAmount] = useState<number>(100000);
   const [gateway, setGateway] = useState<PaymentGateway>('wompi');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleProcessPayment = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsApproved(true);
-      onConfirmTopup(amount, gateway);
-      setTimeout(() => {
-        setIsApproved(false);
-        onClose();
-      }, 1600);
-    }, 1500);
+  const handleOpenQr = () => {
+    setShowQrModal(true);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-md glass-panel rounded-2xl p-6 border border-slate-700/60 shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-              <Wallet className="w-5 h-5" />
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div className="relative w-full max-w-md glass-panel rounded-2xl p-6 border border-slate-700/60 shadow-2xl">
+          {/* Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                <Wallet className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg text-white">Recargar Bolsa de Saldo</h3>
+                <p className="text-xs text-slate-400">Acreditación instantánea 24/7</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-lg text-white">Recargar Bolsa de Saldo</h3>
-              <p className="text-xs text-slate-400">Acreditación instantánea 24/7</p>
-            </div>
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
 
-        {isApproved ? (
-          <div className="py-8 text-center space-y-3">
-            <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30 animate-bounce">
-              <CheckCircle2 className="w-9 h-9" />
-            </div>
-            <h4 className="text-xl font-bold text-white">¡Recarga Aprobada Exitosamente!</h4>
-            <p className="text-sm font-semibold text-emerald-400">
-              +${amount.toLocaleString('es-CO')} COP abonados a tu saldo
-            </p>
-            <p className="text-xs text-slate-400">
-              Webhook de pasarela recibido y verificado en la base de datos.
-            </p>
-          </div>
-        ) : isProcessing ? (
-          <div className="py-10 text-center space-y-4">
-            <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-sm font-medium text-slate-200">
-              Conectando con la pasarela de pagos ({gateway.toUpperCase()})...
-            </p>
-            <p className="text-xs text-slate-400">
-              Confirmando transacción bancaria segura...
-            </p>
-          </div>
-        ) : (
           <div className="mt-5 space-y-5">
             {/* Montos predefinidos */}
             <div>
@@ -218,16 +185,32 @@ export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfi
               </button>
               <button
                 type="button"
-                onClick={handleProcessPayment}
+                onClick={handleOpenQr}
                 className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
               >
-                Pagar y Recargar
+                Generar QR de Pago
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* Dynamic QR Modal */}
+      <DynamicQrModal
+        isOpen={showQrModal}
+        amount={amount}
+        gateway={gateway}
+        onClose={() => {
+          setShowQrModal(false);
+          onClose();
+        }}
+        onPaymentApproved={(paidAmount, paidGateway, ref) => {
+          onConfirmTopup(paidAmount, paidGateway, ref);
+          setShowQrModal(false);
+          onClose();
+        }}
+      />
+    </>
   );
 };

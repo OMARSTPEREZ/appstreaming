@@ -42,11 +42,17 @@ import { CartDrawer } from '@/components/seller/CartDrawer';
 import { HouseholdCodeModal } from '@/components/HouseholdCodeModal';
 import { ReportIssueModal } from '@/components/ReportIssueModal';
 import { TopupModal } from '@/components/TopupModal';
+import { MobileBottomNav } from '@/components/MobileBottomNav';
 
 export default function Home() {
   const [appState, setAppState] = useState<AppState | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
+  
+  // Tab State
+  const [sellerActiveTab, setSellerActiveTab] = useState<'catalog' | 'sales' | 'topups'>('catalog');
+  const [adminActiveTab, setAdminActiveTab] = useState<'monitor' | 'support' | 'inventory_stock'>('monitor');
+  const [purchaseNotice, setPurchaseNotice] = useState<string | null>(null);
   
   // Auth Form State
   const [authEmail, setAuthEmail] = useState('');
@@ -271,6 +277,12 @@ export default function Home() {
         cart: [],
       };
     });
+
+    // Auto-redirección a la pestaña Mis Ventas
+    setSellerActiveTab('sales');
+    setIsCartOpen(false);
+    setPurchaseNotice('¡Compra exitosa! Tus nuevas credenciales ya están disponibles para entrega inmediata.');
+    setTimeout(() => setPurchaseNotice(null), 6000);
   };
 
   // Process Topup

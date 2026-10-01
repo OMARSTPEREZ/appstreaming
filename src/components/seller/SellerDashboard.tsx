@@ -22,6 +22,8 @@ interface SellerDashboardProps {
   topups: Topup[];
   inventoryCounts: Record<string, number>;
   currentBalance: number;
+  activeTab?: 'catalog' | 'sales' | 'topups';
+  onTabChange?: (tab: 'catalog' | 'sales' | 'topups') => void;
   onAddToCart: (product: Product) => void;
   onOpenHouseholdCode: (sale: Sale) => void;
   onOpenReportIssue: (sale: Sale) => void;
@@ -34,12 +36,20 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   topups,
   inventoryCounts,
   currentBalance,
+  activeTab: propActiveTab,
+  onTabChange,
   onAddToCart,
   onOpenHouseholdCode,
   onOpenReportIssue,
   onProcessTopup,
 }) => {
-  const [activeTab, setActiveTab] = useState<'catalog' | 'sales' | 'topups'>('catalog');
+  const [internalTab, setInternalTab] = useState<'catalog' | 'sales' | 'topups'>('catalog');
+  const activeTab = propActiveTab || internalTab;
+
+  const handleTabClick = (tab: 'catalog' | 'sales' | 'topups') => {
+    setInternalTab(tab);
+    if (onTabChange) onTabChange(tab);
+  };
 
   const activeSalesCount = sales.filter((s) => s.status === 'active').length;
 
@@ -50,7 +60,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
       <div className="flex items-center justify-between border-b border-slate-800 pb-4 overflow-x-auto gap-4">
         <div className="flex items-center gap-2 p-1 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-inner">
           <button
-            onClick={() => setActiveTab('catalog')}
+            onClick={() => handleTabClick('catalog')}
             className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
               activeTab === 'catalog'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
@@ -62,7 +72,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('sales')}
+            onClick={() => handleTabClick('sales')}
             className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
               activeTab === 'sales'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
@@ -79,7 +89,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('topups')}
+            onClick={() => handleTabClick('topups')}
             className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap ${
               activeTab === 'topups'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'

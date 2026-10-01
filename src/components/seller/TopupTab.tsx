@@ -15,11 +15,12 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Topup, PaymentGateway } from '@/lib/types';
+import { DynamicQrModal } from '../DynamicQrModal';
 
 interface TopupTabProps {
   currentBalance: number;
   topups: Topup[];
-  onProcessTopup: (amount: number, gateway: PaymentGateway) => void;
+  onProcessTopup: (amount: number, gateway: PaymentGateway, reference?: string) => void;
 }
 
 export const TopupTab: React.FC<TopupTabProps> = ({
@@ -29,19 +30,11 @@ export const TopupTab: React.FC<TopupTabProps> = ({
 }) => {
   const [amount, setAmount] = useState<number>(100000);
   const [gateway, setGateway] = useState<PaymentGateway>('wompi');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
-  const handleSimulatePayment = () => {
+  const handleOpenQr = () => {
     if (amount < 10000) return;
-
-    setIsProcessing(true);
-    setTimeout(() => {
-      onProcessTopup(amount, gateway);
-      setIsProcessing(false);
-      setSuccessMessage(true);
-      setTimeout(() => setSuccessMessage(false), 3000);
-    }, 1500);
+    setShowQrModal(true);
   };
 
   return (
@@ -210,30 +203,12 @@ export const TopupTab: React.FC<TopupTabProps> = ({
             </div>
           </div>
 
-          {/* Feedback & Submit Button */}
-          {successMessage && (
-            <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-xs text-emerald-300 flex items-center gap-2 animate-in fade-in">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-              <span>¡Webhook recibido! Se acreditaron <strong>${amount.toLocaleString('es-CO')} COP</strong> a tu saldo.</span>
-            </div>
-          )}
-
           <button
-            onClick={handleSimulatePayment}
-            disabled={isProcessing}
+            onClick={handleOpenQr}
             className="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
           >
-            {isProcessing ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Ejecutando Webhook de Pasarela...
-              </>
-            ) : (
-              <>
-                Confirmar Pago de ${amount.toLocaleString('es-CO')} COP
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            Generar QR Dinámico de ${amount.toLocaleString('es-CO')} COP
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -286,6 +261,18 @@ export const TopupTab: React.FC<TopupTabProps> = ({
         </div>
 
       </div>
+
+      {/* Dynamic QR Modal */}
+      <DynamicQrModal
+        isOpen={showQrModal}
+        amount={amount}
+        gateway={gateway}
+        onClose={() => setShowQrModal(false)}
+        onPaymentApproved={(paidAmount, paidGateway, ref) => {
+          onProcessTopup(paidAmount, paidGateway, ref);
+          setShowQrModal(false);
+        }}
+      />
     </div>
   );
 };

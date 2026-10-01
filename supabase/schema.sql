@@ -162,107 +162,180 @@ CREATE POLICY "tickets_all_superadmin" ON public.support_tickets
     FOR ALL TO authenticated USING (public.is_superadmin());
 
 -- ==============================================================================
--- FUNCIÓN RPC ATÓMICA: COMPRA DE CUENTA (TRANSACCIÓN SEGURA)
+-- FUNCIÓN RPC ATÓMICA: COMPRA DE CARRITO MULTI-PRODUCTO (TRANSACCIÓN SEGURA)
 -- ==============================================================================
 
-CREATE OR REPLACE FUNCTION public.purchase_account(
-    p_product_id UUID,
+CREATE OR REPLACE FUNCTION public.purchase_cart(
+    p_items JSONB, -- Array de objetos: [{"product_id": "...", "quantity": 2}, ...]
     p_seller_id UUID
 )
 RETURNS JSONB AS $$
 DECLARE
     v_seller_balance NUMERIC(12, 2);
+    v_total_cost NUMERIC(12, 2) := 0;
+    v_item JSONB;
+    v_product_id UUID;
+    v_quantity INT;
     v_product RECORD;
     v_inventory RECORD;
     v_sale_id UUID;
     v_expires_at TIMESTAMPTZ;
+    v_sales_created JSONB := '[]'::JSONB;
+    v_inv_ids UUID[] := ARRAY[]::UUID[];
+    i INT;
 BEGIN
-    -- 1. Obtener información del producto
-    SELECT * INTO v_product FROM public.products WHERE id = p_product_id AND is_active = true;
-    IF NOT FOUND THEN
-        RETURN jsonb_build_object('success', false, 'error', 'Producto no encontrado o inactivo');
-    END IF;
-
-    -- 2. Verificar saldo del vendedor
-    SELECT balance INTO v_seller_balance FROM public.profiles WHERE id = p_seller_id FOR UPDATE;
-    IF NOT FOUND THEN
-        RETURN jsonb_build_object('success', false, 'error', 'Vendedor no encontrado');
-    END IF;
-
-    IF v_seller_balance < v_product.reseller_price THEN
-        RETURN jsonb_build_object(
-            'success', false, 
-            'error', 'Saldo insuficiente en bolsa. Saldo: $' || v_seller_balance || ' - Requerido: $' || v_product.reseller_price
-        );
-    END IF;
-
-    -- 3. Bloquear y obtener 1 cuenta disponible en inventario (FOR UPDATE SKIP LOCKED)
-    SELECT * INTO v_inventory 
-    FROM public.inventory 
-    WHERE product_id = p_product_id AND status = 'available' 
-    LIMIT 1 
-    FOR UPDATE SKIP LOCKED;
+    -- 1. Bloquear y verificar perfil del vendedor
+    SELECT balance INTO v_seller_balance 
+    FROM public.profiles 
+    WHERE id = p_seller_id 
+    FOR UPDATE;
 
     IF NOT FOUND THEN
-        RETURN jsonb_build_object('success', false, 'error', 'No hay stock disponible para este producto en este momento');
+        RAISE EXCEPTION 'Vendedor no encontrado';
     END IF;
 
-    -- 4. Calcular fecha de vencimiento
-    v_expires_at := timezone('utc'::text, now()) + (v_product.duration_days || ' days')::INTERVAL;
+    -- 2. Calcular costo total y verificar existencia de productos
+    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
+    LOOP
+        v_product_id := (v_item->>'product_id')::UUID;
+        v_quantity := COALESCE((v_item->>'quantity')::INT, 1);
 
-    -- 5. Descontar saldo del vendedor
+        SELECT * INTO v_product FROM public.products WHERE id = v_product_id AND is_active = true;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'Producto con ID % no encontrado o inactivo', v_product_id;
+        END IF;
+
+        v_total_cost := v_total_cost + (v_product.reseller_price * v_quantity);
+    END LOOP;
+
+    -- 3. Verificar si el saldo es suficiente
+    IF v_seller_balance < v_total_cost THEN
+        RAISE EXCEPTION 'Saldo insuficiente en bolsa. Saldo: $% - Requerido: $%', v_seller_balance, v_total_cost;
+    END IF;
+
+    -- 4. Procesar cada ítem del carrito con bloqueo de stock
+    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
+    LOOP
+        v_product_id := (v_item->>'product_id')::UUID;
+        v_quantity := COALESCE((v_item->>'quantity')::INT, 1);
+        SELECT * INTO v_product FROM public.products WHERE id = v_product_id;
+
+        FOR i IN 1..v_quantity
+        LOOP
+            -- Bloquear 1 fila de inventario disponible para este producto
+            SELECT * INTO v_inventory 
+            FROM public.inventory 
+            WHERE product_id = v_product_id 
+              AND status = 'available'
+              AND NOT (id = ANY(v_inv_ids))
+            LIMIT 1 
+            FOR UPDATE SKIP LOCKED;
+
+            IF NOT FOUND THEN
+                RAISE EXCEPTION 'Stock insuficiente para el producto % (% disponibles)', v_product.name, (i - 1);
+            END IF;
+
+            v_inv_ids := array_append(v_inv_ids, v_inventory.id);
+            v_expires_at := timezone('utc'::text, now()) + (v_product.duration_days || ' days')::INTERVAL;
+
+            -- Marcar inventario como vendido
+            UPDATE public.inventory 
+            SET status = 'sold',
+                assigned_to = p_seller_id,
+                updated_at = timezone('utc'::text, now())
+            WHERE id = v_inventory.id;
+
+            -- Insertar registro de venta
+            INSERT INTO public.sales (
+                seller_id, inventory_id, product_id, cost_price, sale_price, suggested_price,
+                account_email, account_password, profile_pin, household_code, status, purchased_at, expires_at
+            ) VALUES (
+                p_seller_id, v_inventory.id, v_product_id, v_product.cost_price, v_product.reseller_price, v_product.suggested_price,
+                v_inventory.email, v_inventory.password, v_inventory.profile_pin, v_inventory.household_code, 'active', timezone('utc'::text, now()), v_expires_at
+            ) RETURNING id INTO v_sale_id;
+
+            v_sales_created := v_sales_created || jsonb_build_object(
+                'sale_id', v_sale_id,
+                'product_name', v_product.name,
+                'email', v_inventory.email,
+                'password', v_inventory.password,
+                'profile_pin', v_inventory.profile_pin,
+                'household_code', v_inventory.household_code,
+                'expires_at', v_expires_at
+            );
+        END LOOP;
+    END LOOP;
+
+    -- 5. Descontar saldo total del vendedor
     UPDATE public.profiles 
-    SET balance = balance - v_product.reseller_price,
+    SET balance = balance - v_total_cost,
         updated_at = timezone('utc'::text, now())
     WHERE id = p_seller_id;
 
-    -- 6. Actualizar inventario a vendido
-    UPDATE public.inventory 
-    SET status = 'sold',
-        assigned_to = p_seller_id,
-        updated_at = timezone('utc'::text, now())
-    WHERE id = v_inventory.id;
+    RETURN jsonb_build_object(
+        'success', true,
+        'total_spent', v_total_cost,
+        'remaining_balance', v_seller_balance - v_total_cost,
+        'items_count', jsonb_array_length(v_sales_created),
+        'sales', v_sales_created
+    );
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'error', SQLERRM
+        );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-    -- 7. Registrar venta
-    INSERT INTO public.sales (
-        seller_id,
-        inventory_id,
-        product_id,
-        cost_price,
-        sale_price,
-        suggested_price,
-        account_email,
-        account_password,
-        profile_pin,
-        household_code,
-        status,
-        purchased_at,
-        expires_at
-    ) VALUES (
-        p_seller_id,
-        v_inventory.id,
-        p_product_id,
-        v_product.cost_price,
-        v_product.reseller_price,
-        v_product.suggested_price,
-        v_inventory.email,
-        v_inventory.password,
-        v_inventory.profile_pin,
-        v_inventory.household_code,
-        'active',
-        timezone('utc'::text, now()),
-        v_expires_at
-    ) RETURNING id INTO v_sale_id;
+-- ==============================================================================
+-- FUNCIÓN RPC: CONCILIACIÓN AUTOMÁTICA DE RECARGA WEBHOOK
+-- ==============================================================================
+
+CREATE OR REPLACE FUNCTION public.process_webhook_approval(
+    p_reference TEXT,
+    p_gateway TEXT,
+    p_transaction_id TEXT,
+    p_amount NUMERIC DEFAULT NULL
+)
+RETURNS JSONB AS $$
+DECLARE
+    v_topup RECORD;
+    v_amount NUMERIC(12, 2);
+BEGIN
+    SELECT * INTO v_topup 
+    FROM public.topups 
+    WHERE transaction_id = p_reference 
+    FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('success', false, 'error', 'Recarga no encontrada con referencia ' || p_reference);
+    END IF;
+
+    IF v_topup.status = 'approved' THEN
+        RETURN jsonb_build_object('success', true, 'message', 'Recarga ya aprobada previamente');
+    END IF;
+
+    v_amount := COALESCE(p_amount, v_topup.amount);
+
+    -- Actualizar topup a aprobado
+    UPDATE public.topups 
+    SET status = 'approved',
+        payment_gateway = p_gateway,
+        approved_at = timezone('utc'::text, now())
+    WHERE id = v_topup.id;
+
+    -- Acreditar saldo en el perfil del revendedor
+    UPDATE public.profiles 
+    SET balance = balance + v_amount,
+        updated_at = timezone('utc'::text, now())
+    WHERE id = v_topup.seller_id;
 
     RETURN jsonb_build_object(
         'success', true,
-        'sale_id', v_sale_id,
-        'remaining_balance', v_seller_balance - v_product.reseller_price,
-        'email', v_inventory.email,
-        'password', v_inventory.password,
-        'profile_pin', v_inventory.profile_pin,
-        'household_code', v_inventory.household_code,
-        'expires_at', v_expires_at
+        'message', 'Saldo acreditado exitosamente',
+        'seller_id', v_topup.seller_id,
+        'amount_credited', v_amount
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
