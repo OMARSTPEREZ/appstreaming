@@ -33,7 +33,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'NETFLIX ORIGINAL', tagline: '4K Ultra HD · PIN Privado · Cuenta Original',
     badge: '⭐ MÁS VENDIDO',
     rules: ['1 dispositivo por pantalla', 'No modificar contraseña madre', 'Usar PIN de perfil asignado', 'Reportar si solicitan código de hogar'],
-    guarantee: '30 días. Perfil caído o clave cambiada → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM · Respuesta < 2 h',
+    guarantee: '30 días. Perfil caído o clave cambiada → reemplazo sin costo.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'netflix extra': {
     gradient: 'linear-gradient(135deg, #1a0000 0%, #800000 50%, #CC0000 100%)',
@@ -41,14 +41,14 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'NETFLIX EXTRA', tagline: 'Miembro Extra Oficial · Perfil Propio',
     badge: '🔥 ALTA DEMANDA',
     rules: ['Perfil independiente del administrador', 'No modificar datos de facturación', 'Acceso desde tu correo personal'],
-    guarantee: '30 días garantizados. Reemplazo sin costo si el cupo extra es removido.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Reemplazo sin costo si el cupo extra es removido.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   netflix: {
     gradient: 'linear-gradient(135deg, #160000 0%, #6b0000 50%, #E50914 100%)',
     glow: 'rgba(229,9,20,0.45)', accent: '#E50914',
     label: 'NETFLIX', tagline: 'Catálogo Completo · Uso Libre',
     rules: ['Uso libre en pantalla asignada', 'No cambiar la cuenta de correo principal', 'Reportar incidencias dentro de las 24 h'],
-    guarantee: '30 días garantizados. Reemplazo inmediato si la pantalla deja de funcionar.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Reemplazo inmediato si la pantalla deja de funcionar.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'stella tv': {
     gradient: 'linear-gradient(135deg, #0d0018 0%, #3b0066 50%, #8B5CF6 100%)',
@@ -56,7 +56,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'STELLA TV', tagline: '+500 Canales en Vivo · Deportes & VOD',
     badge: '⚽ DEPORTES & CANALES VIVO',
     rules: ['Uso en dispositivos autorizados', 'No compartir credenciales masivamente', 'Reiniciar app si hay buffering'],
-    guarantee: '30 días. Canal caído o acceso bloqueado → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Canal caído o acceso bloqueado → reemplazo sin costo.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   jellyfin: {
     gradient: 'linear-gradient(135deg, #0a0016 0%, #2d006b 50%, #7C3AED 100%)',
@@ -64,7 +64,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'JELLYFIN', tagline: 'Servidor Privado · Series & Películas · Canales',
     badge: '⚽ DEPORTES & CANALES VIVO',
     rules: ['No compartir credenciales con terceros externos', 'Máximo de dispositivos según plan contratado', 'Reportar caídas en < 24 h'],
-    guarantee: '30 días. Acceso bloqueado → reemplazo del acceso sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Acceso bloqueado → reemplazo del acceso sin costo.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   emby: {
     gradient: 'linear-gradient(135deg, #001a0a 0%, #004d1f 50%, #52B788 100%)',
@@ -72,7 +72,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'EMBY', tagline: 'Servidor Premium · Canales & VOD',
     badge: '⚽ DEPORTES & CANALES VIVO',
     rules: ['Uso en el dispositivo asignado', 'No modificar configuración del servidor', 'Canal no disponible → ticket de soporte'],
-    guarantee: '30 días garantizados. Reemplazo por fallas del servidor.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Reemplazo por fallas del servidor.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'iptv win+': {
     gradient: 'linear-gradient(135deg, #1a0800 0%, #7a3000 50%, #F97316 100%)',
@@ -80,7 +80,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'IPTV + WIN SPORTS+', tagline: 'Canales Premium · Fútbol Colombiano Win+',
     badge: '⚽ DEPORTES & CANALES VIVO',
     rules: ['Win Sports+ requiere conexión estable', 'No compartir credenciales de acceso', 'Usar app autorizada para el plan'],
-    guarantee: '30 días. Si Win+ no disponible → reemplazo o reembolso proporcional.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM · Prioridad deportes',
+    guarantee: '30 días. Si Win+ no disponible → reemplazo o reembolso proporcional.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   plex: {
     gradient: 'linear-gradient(135deg, #1a1000 0%, #7a5000 50%, #E5A00D 100%)',
@@ -88,7 +88,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'PLEX', tagline: 'Catálogo Amplio · Canales Incluidos',
     badge: '📺 STREAMING & TV',
     rules: ['Uso en dispositivos Plex compatibles', 'No revocar permisos del servidor', 'Reportar error en < 24 h'],
-    guarantee: '30 días. Acceso perdido → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Acceso perdido → reemplazo sin costo.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'disney+': {
     gradient: 'linear-gradient(135deg, #000a1a 0%, #00304a 50%, #00637C 100%)',
@@ -96,28 +96,28 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'DISNEY+', tagline: 'Disney · Marvel · Star Wars · ESPN',
     badge: '🏆 PREMIUM + ESPN',
     rules: ['No cambiar nombre ni avatar del perfil', 'No acceder al perfil del administrador', 'Resolución 4K con Dolby Vision disponible'],
-    guarantee: '30 días. Perfil eliminado → reemplazo < 1 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Perfil eliminado → reemplazo < 1 h.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'prime video': {
     gradient: 'linear-gradient(135deg, #001a1a 0%, #005a7a 50%, #00A8E1 100%)',
     glow: 'rgba(0,168,225,0.55)', accent: '#00A8E1',
     label: 'PRIME VIDEO', tagline: 'Amazon Originals · HD & 4K',
     rules: ['No compartir credenciales fuera del hogar', 'No modificar método de pago', 'Acceso a Prime Music incluido en cuenta original'],
-    guarantee: '30 días. Acceso revocado → reemplazo o reembolso.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Acceso revocado → reemplazo o reembolso.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'hbo max': {
     gradient: 'linear-gradient(135deg, #0d001a 0%, #3d0066 50%, #7B2FBE 100%)',
     glow: 'rgba(123,47,190,0.60)', accent: '#7B2FBE',
     label: 'HBO MAX', tagline: 'HBO Originals · Warner · DC · 4K HDR',
     rules: ['Uso del perfil asignado únicamente', 'No modificar configuración de la cuenta', '4K requiere plan Platino en algunos casos'],
-    guarantee: '30 días. Perfil caído → reemplazo en < 2 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Perfil caído → reemplazo en < 2 h.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   'paramount+': {
     gradient: 'linear-gradient(135deg, #00001a 0%, #00006b 50%, #0064FF 100%)',
     glow: 'rgba(0,100,255,0.55)', accent: '#0064FF',
     label: 'PARAMOUNT+', tagline: 'Series Exclusivas · Deportes · Películas',
     rules: ['Uso del perfil asignado', 'No compartir con múltiples usuarios externos', 'Reportar incidencias en < 24 h'],
-    guarantee: '30 días garantizados. Reemplazo por fallas de acceso.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Reemplazo por fallas de acceso.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   crunchyroll: {
     gradient: 'linear-gradient(135deg, #1a0500 0%, #7a2800 50%, #FF6600 100%)',
@@ -125,14 +125,14 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'CRUNCHYROLL', tagline: 'Todo el Anime · Simulcast Japón 🐉',
     badge: '🐉 ANIME PREMIUM',
     rules: ['No compartir cuenta fuera del plan contratado', 'Simulcast disponible al día siguiente de emisión en JP', 'Máximo de dispositivos según plan'],
-    guarantee: '30 días. Acceso perdido → reemplazo en < 2 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Acceso perdido → reemplazo en < 2 h.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   vix: {
     gradient: 'linear-gradient(135deg, #1a001a 0%, #6b0066 50%, #D946EF 100%)',
     glow: 'rgba(217,70,239,0.55)', accent: '#D946EF',
     label: 'VIX', tagline: 'Contenido Latino Premium · Novelas & Deportes',
     rules: ['Uso en dispositivos ViX compatibles', 'No modificar datos de la cuenta', 'Contenido en español exclusivo'],
-    guarantee: '30 días. Acceso bloqueado → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días. Acceso bloqueado → reemplazo sin costo.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   youtube: {
     gradient: 'linear-gradient(135deg, #1a0000 0%, #7a0000 50%, #FF0000 100%)',
@@ -140,7 +140,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'YOUTUBE PREMIUM', tagline: 'Sin Anuncios · YouTube Music Incluido 🎼',
     badge: '🎼 MÚSICA & AD-FREE',
     rules: ['Activar en tu correo Google personal', 'No compartir acceso con terceros', 'Compatible con Chromecast y Smart TV'],
-    guarantee: '30 días garantizados. Reactivación sin costo si el período no venció.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Reactivación sin costo si el período no venció.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
   spotify: {
     gradient: 'linear-gradient(135deg, #001a08 0%, #006b22 50%, #1DB954 100%)',
@@ -148,7 +148,7 @@ const BRAND: Record<string, BrandConfig> = {
     label: 'SPOTIFY', tagline: 'Música Premium · 320 kbps · Sin Anuncios 🎼',
     badge: '🎼 MÚSICA & AD-FREE',
     rules: ['Activar Premium en tu cuenta existente', 'No modificar método de pago', 'Compatible con Alexa, Chromecast y más'],
-    guarantee: '30 días garantizados. Renovación sin costo si Spotify suspende.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+    guarantee: '30 días garantizados. Renovación sin costo si Spotify suspende.', support: '24/7 Automatizado · Respuesta Inmediata',
   },
 };
 
@@ -158,7 +158,7 @@ const DEFAULT_BRAND: BrandConfig = {
   label: 'STREAMING', tagline: 'Servicio Digital · Entrega Inmediata',
   rules: ['Uso personal o reventa individual', 'No compartir con usuarios no autorizados', 'Reportar incidencias en < 24 h'],
   guarantee: '30 días garantizados. Reemplazo o reembolso proporcional.',
-  support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  support: '24/7 Automatizado · Respuesta Inmediata',
 };
 
 const getBrand = (brand: string): BrandConfig => BRAND[brand.toLowerCase()] ?? DEFAULT_BRAND;
@@ -234,7 +234,7 @@ const DetailOverlay: React.FC<OverlayProps> = ({ product, stock, isAdded, onClos
           <div>
             <h2 className="text-lg font-extrabold text-white leading-tight">{product.name}</h2>
             <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-              <Clock className="w-3 h-3 text-indigo-400" /> {product.duration_days} días continuos · Garantía activa Lun–Dom 9 AM – 8:30 PM
+              <Clock className="w-3 h-3 text-indigo-400" /> {product.duration_days} días continuos · Garantía y Despacho 24/7 Ininterrumpido
             </p>
           </div>
 
@@ -336,17 +336,17 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCount
   return (
     <div className="space-y-4">
 
-      {/* ── Banner Horarios ─────────────────────────────────────── */}
+      {/* ── Banner 24/7 Automatizado ───────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900/80 border border-emerald-500/20 text-xs">
         <span className="flex items-center gap-1.5 text-emerald-400 font-bold whitespace-nowrap">
-          🟢 Ventas: <span className="text-slate-300 font-medium">9:00 AM – 10:00 PM</span>
+          🟢 Despacho & Plataforma: <span className="text-slate-200 font-semibold">100% Activo 24/7</span>
         </span>
         <span className="hidden sm:block text-slate-700">|</span>
         <span className="flex items-center gap-1.5 text-indigo-400 font-bold whitespace-nowrap">
-          🛠️ Soporte & Garantías: <span className="text-slate-300 font-medium">9:00 AM – 8:30 PM</span>
+          ⚡ Entrega Inmediata: <span className="text-slate-200 font-semibold">Credenciales en Tiempo Real</span>
         </span>
         <span className="hidden sm:block text-slate-700">|</span>
-        <span className="text-slate-500 font-medium">Lunes a Domingo · Atención ininterrumpida</span>
+        <span className="text-slate-400 font-medium">Lunes a Domingo · Sin horarios · Acreditación 24 Horas</span>
       </div>
 
       {/* ── Hero Banner ─────────────────────────────────────────── */}
