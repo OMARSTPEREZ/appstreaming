@@ -21,6 +21,7 @@ import {
 import { 
   getStoredData, 
   saveStoredData, 
+  getInitialState,
   AppState 
 } from '@/lib/store';
 import { 
@@ -35,7 +36,7 @@ import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { BulkInventoryModal } from '@/components/admin/BulkInventoryModal';
 
 export default function AdminAccessPage() {
-  const [appState, setAppState] = useState<AppState | null>(null);
+  const [appState, setAppState] = useState<AppState>(getInitialState);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   
   // Auth Form State
@@ -47,35 +48,28 @@ export default function AdminAccessPage() {
 
   // Load state on mount
   useEffect(() => {
-    const data = getStoredData();
-    setAppState(data);
-    
-    // Check if current user is already an authenticated superadmin
-    if (data.currentRole === 'superadmin' && data.currentSeller?.role === 'superadmin') {
-      setIsAdminAuthenticated(true);
+    try {
+      const data = getStoredData();
+      if (data) {
+        setAppState(data);
+        // Check if current user is already an authenticated superadmin
+        if (data.currentRole === 'superadmin' && data.currentSeller?.role === 'superadmin') {
+          setIsAdminAuthenticated(true);
+        }
+      }
+    } catch (err) {
+      console.error('Error loading admin state:', err);
     }
   }, []);
 
   // Sync state to LocalStorage
   const updateState = (updater: (prev: AppState) => AppState) => {
     setAppState((prev) => {
-      if (!prev) return prev;
       const next = updater(prev);
       saveStoredData(next);
       return next;
     });
   };
-
-  if (!appState) {
-    return (
-      <div className="min-h-screen bg-[#05070e] flex items-center justify-center text-slate-400 font-medium">
-        <div className="flex items-center gap-3">
-          <div className="w-5 h-5 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
-          <span>Cargando Módulo SuperAdmin Master...</span>
-        </div>
-      </div>
-    );
-  }
 
   // Handle Admin Login
   const handleAdminAuthSubmit = (e: React.FormEvent) => {

@@ -14,6 +14,7 @@ import {
 import { 
   getStoredData, 
   saveStoredData, 
+  getInitialState,
   AppState 
 } from '@/lib/store';
 import { 
@@ -35,7 +36,7 @@ import { TopupModal } from '@/components/TopupModal';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 
 export default function Home() {
-  const [appState, setAppState] = useState<AppState | null>(null);
+  const [appState, setAppState] = useState<AppState>(getInitialState);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   
@@ -56,11 +57,13 @@ export default function Home() {
   const [selectedSaleForCode, setSelectedSaleForCode] = useState<Sale | null>(null);
   const [selectedSaleForReport, setSelectedSaleForReport] = useState<Sale | null>(null);
 
-  // Load state on mount
+  // Load state on mount from localStorage
   useEffect(() => {
     try {
       const data = getStoredData();
-      setAppState(data);
+      if (data) {
+        setAppState(data);
+      }
     } catch (err) {
       console.error('Error initializing state:', err);
     }
@@ -69,23 +72,11 @@ export default function Home() {
   // Sync state to LocalStorage on updates
   const updateState = (updater: (prev: AppState) => AppState) => {
     setAppState((prev) => {
-      if (!prev) return prev;
       const next = updater(prev);
       saveStoredData(next);
       return next;
     });
   };
-
-  if (!appState) {
-    return (
-      <div className="min-h-screen bg-[#080c16] flex items-center justify-center text-slate-400 font-medium">
-        <div className="flex items-center gap-3">
-          <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          <span>Iniciando Portal de Distribuidores...</span>
-        </div>
-      </div>
-    );
-  }
 
   // Inventory count lookup
   const inventoryCounts = appState.products.reduce((acc, prod) => {
