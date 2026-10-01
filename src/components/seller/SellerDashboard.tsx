@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Tv, 
   Key, 
@@ -43,12 +43,19 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   onOpenReportIssue,
   onProcessTopup,
 }) => {
-  const [internalTab, setInternalTab] = useState<'catalog' | 'sales' | 'topups'>('catalog');
-  const activeTab = propActiveTab || internalTab;
+  const [activeTab, setActiveTab] = useState<'catalog' | 'sales' | 'topups'>(propActiveTab || 'catalog');
+
+  useEffect(() => {
+    if (propActiveTab && propActiveTab !== activeTab) {
+      setActiveTab(propActiveTab);
+    }
+  }, [propActiveTab]);
 
   const handleTabClick = (tab: 'catalog' | 'sales' | 'topups') => {
-    setInternalTab(tab);
-    if (onTabChange) onTabChange(tab);
+    setActiveTab(tab);
+    if (onTabChange) {
+      onTabChange(tab);
+    }
   };
 
   const activeSalesCount = sales.filter((s) => s.status === 'active').length;
