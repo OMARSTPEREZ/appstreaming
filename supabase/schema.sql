@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 CREATE TABLE IF NOT EXISTS public.products (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
-    category TEXT NOT NULL CHECK (category IN ('Perfiles / Pantallas', 'Cuentas Completas', 'Combos Especiales', 'Licencias Digitales', 'Música y Entretenimiento')),
+    category TEXT NOT NULL CHECK (category IN ('Streaming', 'IPTV & TV', 'Música & Vídeo', 'Perfiles / Pantallas', 'Cuentas Completas', 'Combos Especiales', 'Licencias Digitales', 'Música y Entretenimiento')),
     brand TEXT NOT NULL,
     description TEXT,
     cost_price NUMERIC(12, 2) NOT NULL DEFAULT 0.00,

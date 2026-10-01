@@ -14,7 +14,12 @@ ALTER TABLE products
   ADD COLUMN IF NOT EXISTS features     TEXT[]  DEFAULT '{}',
   ADD COLUMN IF NOT EXISTS is_active    BOOLEAN DEFAULT true;
 
--- 2. Limpiar productos anteriores de demo (usando casting a text para columnas UUID)
+-- 2. Actualizar el CHECK constraint de categorías para aceptar los nuevos tipos del catálogo real
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
+ALTER TABLE products ADD CONSTRAINT products_category_check 
+  CHECK (category IN ('Streaming', 'IPTV & TV', 'Música & Vídeo', 'Perfiles / Pantallas', 'Cuentas Completas', 'Combos Especiales', 'Licencias Digitales', 'Música y Entretenimiento'));
+
+-- 3. Limpiar productos anteriores de demo (usando casting a text para columnas UUID)
 DELETE FROM products WHERE id::text LIKE 'demo-%' OR name ILIKE '%mock%' OR name ILIKE '%demo%';
 
 -- 3. Insertar catálogo real N.T.O.
