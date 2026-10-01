@@ -62,3 +62,25 @@ body {
 .animate-soft-pulse {
   animation: soft-pulse 3s infinite ease-in-out;
 }
+
+/* Mobile Bottom Sheet slide-up animation */
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Neon card hover glow transition */
+.card-neon-hover {
+  transition: box-shadow 0.3s ease, transform 0.25s ease;
+}
+.card-neon-hover:hover {
+  transform: translateY(-3px);
+}

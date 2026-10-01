@@ -6,35 +6,28 @@ import {
   Wallet, 
   PlusCircle, 
   ShoppingCart, 
-  Shield, 
-  UserCheck, 
   LogOut, 
-  Sparkles,
-  Flame
+  User
 } from 'lucide-react';
-import { Profile, UserRole } from '@/lib/types';
+import { Profile } from '@/lib/types';
 
 interface NavbarProps {
-  currentRole: UserRole;
   currentSeller: Profile;
   cartCount: number;
   onOpenCart: () => void;
   onOpenTopup: () => void;
-  onSwitchRole: (role: UserRole) => void;
   onLogout: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  currentRole,
   currentSeller,
   cartCount,
   onOpenCart,
   onOpenTopup,
-  onSwitchRole,
   onLogout,
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
         
         {/* Brand Logo */}
@@ -58,33 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Center/Right Action Controls */}
         <div className="flex items-center gap-3 sm:gap-4">
           
-          {/* Quick Role Switcher (SuperAdmin / Seller) */}
-          <div className="hidden md:flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800">
-            <button
-              onClick={() => onSwitchRole('seller')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                currentRole === 'seller'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <UserCheck className="w-3.5 h-3.5" />
-              Panel Vendedor
-            </button>
-            <button
-              onClick={() => onSwitchRole('superadmin')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                currentRole === 'superadmin'
-                  ? 'bg-rose-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Shield className="w-3.5 h-3.5" />
-              SuperAdmin
-            </button>
-          </div>
-
-          {/* Saldo en Bolsa (Visible para Seller y Admin) */}
+          {/* Saldo en Bolsa */}
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-inner">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
               <Wallet className="w-4 h-4" />
@@ -108,29 +75,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Carrito Flotante */}
-          {currentRole === 'seller' && (
-            <button
-              onClick={onOpenCart}
-              className="relative p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-indigo-500 transition group shadow-md"
-              title="Ver Carrito de Compras"
-            >
-              <ShoppingCart className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center animate-bounce shadow-lg shadow-rose-500/40">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-          )}
+          <button
+            onClick={onOpenCart}
+            className="relative p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:border-indigo-500 transition group shadow-md"
+            title="Ver Carrito de Compras"
+          >
+            <ShoppingCart className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center animate-bounce shadow-lg shadow-rose-500/40">
+                {cartCount}
+              </span>
+            )}
+          </button>
 
           {/* User Profile & Logout */}
           <div className="flex items-center gap-2 pl-1 border-l border-slate-800">
             <div className="hidden lg:block text-right">
-              <p className="text-xs font-semibold text-slate-200 truncate max-w-[140px]">
+              <p className="text-xs font-semibold text-slate-200 truncate max-w-[150px]">
                 {currentSeller.full_name}
               </p>
-              <span className="text-[10px] text-indigo-400 capitalize font-medium">
-                {currentRole === 'superadmin' ? 'Mayorista Master' : 'Revendedor VIP'}
+              <span className="text-[10px] text-indigo-400 capitalize font-medium flex items-center justify-end gap-1">
+                <User className="w-3 h-3" /> Distribuidor VIP
               </span>
             </div>
             <button
