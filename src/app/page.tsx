@@ -64,6 +64,10 @@ export default function Home() {
       if (data) {
         setAppState(data);
       }
+      const savedAuth = localStorage.getItem('STREAMRESELL_SELLER_AUTH');
+      if (savedAuth === 'true') {
+        setIsAuthenticated(true);
+      }
     } catch (err) {
       console.error('Error initializing state:', err);
     }
@@ -87,69 +91,64 @@ export default function Home() {
     return acc;
   }, {} as Record<string, number>);
 
-  // Auth Handler for Sellers
+  // Auth Handler for Sellers (Instant, robust)
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setAuthLoading(true);
     setAuthError(null);
+    setAuthLoading(true);
 
-    setTimeout(() => {
-      setAuthLoading(false);
-      if (authTab === 'login') {
-        const found = appState.profiles.find((p) => p.email.toLowerCase() === authEmail.toLowerCase());
-        if (found) {
-          updateState((prev) => ({
-            ...prev,
-            currentRole: 'seller',
-            currentSeller: found,
-          }));
-          setIsAuthenticated(true);
-        } else {
-          // Si no existe, crear perfil de distribuidor
-          const newProfile = {
-            id: 'user-' + Math.random().toString(36).substring(2, 8),
-            email: authEmail,
-            full_name: authEmail.split('@')[0],
-            role: 'seller' as const,
-            balance: 150000,
-            created_at: new Date().toISOString(),
-          };
-          updateState((prev) => ({
-            ...prev,
-            currentRole: 'seller',
-            currentSeller: newProfile,
-            profiles: [...prev.profiles, newProfile],
-          }));
-          setIsAuthenticated(true);
-        }
-      } else {
-        // Register
-        const newProfile = {
-          id: 'user-' + Math.random().toString(36).substring(2, 8),
-          email: authEmail,
-          full_name: authFullName || authEmail.split('@')[0],
-          role: 'seller' as const,
-          balance: 100000,
-          created_at: new Date().toISOString(),
-        };
-        updateState((prev) => ({
-          ...prev,
-          currentRole: 'seller',
-          currentSeller: newProfile,
-          profiles: [...prev.profiles, newProfile],
-        }));
-        setIsAuthenticated(true);
-      }
-    }, 500);
+    const email = authEmail.trim() || 'distribuidor.demo@streamresell.com';
+
+    if (authTab === 'login') {
+      const found = appState.profiles.find((p) => p.email.toLowerCase() === email.toLowerCase());
+      const sellerProfile = found || {
+        id: 'seller-' + Math.random().toString(36).substring(2, 8),
+        email: email,
+        full_name: email.split('@')[0],
+        role: 'seller' as const,
+        balance: 250000,
+        created_at: new Date().toISOString(),
+      };
+      updateState((prev) => ({
+        ...prev,
+        currentRole: 'seller',
+        currentSeller: sellerProfile,
+        profiles: found ? prev.profiles : [...prev.profiles, sellerProfile],
+      }));
+    } else {
+      // Register
+      const newProfile = {
+        id: 'seller-' + Math.random().toString(36).substring(2, 8),
+        email: email,
+        full_name: authFullName.trim() || email.split('@')[0],
+        role: 'seller' as const,
+        balance: 150000,
+        created_at: new Date().toISOString(),
+      };
+      updateState((prev) => ({
+        ...prev,
+        currentRole: 'seller',
+        currentSeller: newProfile,
+        profiles: [...prev.profiles, newProfile],
+      }));
+    }
+
+    try {
+      localStorage.setItem('STREAMRESELL_SELLER_AUTH', 'true');
+    } catch {}
+
+    setAuthLoading(false);
+    setIsAuthenticated(true);
   };
 
   const handleQuickDemoLogin = () => {
     const demoSeller = appState.profiles.find((p) => p.role === 'seller') || {
-      id: 'demo-seller-1',
+      id: 'distribuidor-demo',
       email: 'distribuidor.demo@streamresell.com',
-      full_name: 'Carlos Mendoza (Revendedor VIP)',
+      full_name: 'Distribuidora Streaming Colombia SAS (Demo VIP)',
       role: 'seller',
       balance: 250000,
+      phone: '+57 312 456 7890',
       created_at: new Date().toISOString(),
     };
     updateState((prev) => ({
@@ -157,7 +156,17 @@ export default function Home() {
       currentRole: 'seller',
       currentSeller: demoSeller,
     }));
+    try {
+      localStorage.setItem('STREAMRESELL_SELLER_AUTH', 'true');
+    } catch {}
     setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('STREAMRESELL_SELLER_AUTH');
+    } catch {}
+    setIsAuthenticated(false);
   };
 
   // Cart Operations
@@ -537,7 +546,7 @@ export default function Home() {
         cartCount={appState.cart.reduce((acc, c) => acc + c.quantity, 0)}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenTopup={() => setIsTopupOpen(true)}
-        onLogout={() => setIsAuthenticated(false)}
+        onLogout={handleLogout}
       />
 
       {/* Purchase Notice Banner */}
