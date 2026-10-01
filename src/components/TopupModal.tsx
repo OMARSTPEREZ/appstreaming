@@ -24,12 +24,13 @@ const PRESET_AMOUNTS = [50000, 100000, 200000, 500000];
 
 export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfirmTopup }) => {
   const [amount, setAmount] = useState<number>(100000);
-  const [gateway, setGateway] = useState<PaymentGateway>('wompi');
+  const [gateway, setGateway] = useState<PaymentGateway>('nequi');
   const [showQrModal, setShowQrModal] = useState(false);
 
   if (!isOpen) return null;
 
   const handleOpenQr = () => {
+    if (amount <= 0 || isNaN(amount)) return;
     setShowQrModal(true);
   };
 
@@ -82,10 +83,10 @@ export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfi
                 <span className="absolute left-3.5 top-2.5 text-slate-500 font-semibold text-sm">$</span>
                 <input
                   type="number"
-                  min="20000"
-                  step="5000"
+                  min="1"
+                  step="1000"
                   value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
+                  onChange={(e) => setAmount(Math.max(0, Number(e.target.value)))}
                   className="w-full pl-8 pr-16 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-mono font-bold text-base focus:outline-none focus:border-indigo-500 transition"
                 />
                 <span className="absolute right-3.5 top-2.5 text-xs text-slate-400 font-medium">COP</span>

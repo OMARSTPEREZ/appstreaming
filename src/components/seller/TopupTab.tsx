@@ -29,11 +29,11 @@ export const TopupTab: React.FC<TopupTabProps> = ({
   onProcessTopup,
 }) => {
   const [amount, setAmount] = useState<number>(100000);
-  const [gateway, setGateway] = useState<PaymentGateway>('wompi');
+  const [gateway, setGateway] = useState<PaymentGateway>('nequi');
   const [showQrModal, setShowQrModal] = useState(false);
 
   const handleOpenQr = () => {
-    if (amount < 10000) return;
+    if (amount <= 0 || isNaN(amount)) return;
     setShowQrModal(true);
   };
 
@@ -113,10 +113,10 @@ export const TopupTab: React.FC<TopupTabProps> = ({
               <span className="absolute left-3.5 top-2.5 text-slate-500 font-bold text-base">$</span>
               <input
                 type="number"
-                min="10000"
-                step="5000"
+                min="1"
+                step="1000"
                 value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
+                onChange={(e) => setAmount(Math.max(0, Number(e.target.value)))}
                 className="w-full pl-8 pr-16 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono font-bold text-lg focus:outline-none focus:border-indigo-500 transition"
               />
               <span className="absolute right-3.5 top-3 text-xs text-slate-400 font-semibold">COP</span>
