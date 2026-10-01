@@ -99,9 +99,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </div>
             <button
+              type="button"
               onClick={onLogout}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 transition border border-transparent hover:border-rose-500/20"
+              className="p-2.5 rounded-xl bg-slate-900/60 text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 transition border border-slate-800 hover:border-rose-500/30 cursor-pointer flex items-center justify-center"
               title="Cerrar Sesión"
+              aria-label="Cerrar Sesión"
             >
               <LogOut className="w-4 h-4" />
             </button>
