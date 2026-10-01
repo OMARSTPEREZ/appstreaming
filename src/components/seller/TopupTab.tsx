@@ -144,7 +144,7 @@ export const TopupTab: React.FC<TopupTabProps> = ({
                 </div>
                 <div>
                   <span className="font-bold text-xs block text-slate-200">Nequi Directo</span>
-                  <span className="text-[10px] text-fuchsia-400">QR & Celular 312 456 7890</span>
+                  <span className="text-[10px] text-fuchsia-400">Pasarela Directa</span>
                 </div>
               </button>
 

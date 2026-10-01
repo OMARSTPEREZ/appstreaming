@@ -114,7 +114,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfi
                   </div>
                   <div>
                     <span className="font-semibold text-xs block text-slate-200">Nequi Directo</span>
-                    <span className="text-[10px] text-fuchsia-400">QR & Celular</span>
+                    <span className="text-[10px] text-fuchsia-400">Pasarela Directa</span>
                   </div>
                 </button>
 

@@ -17,7 +17,8 @@ import {
   Smartphone,
   ExternalLink,
   ChevronDown,
-  ArrowUpRight
+  ArrowUpRight,
+  Zap
 } from 'lucide-react';
 import { PaymentGateway } from '@/lib/types';
 
@@ -55,12 +56,10 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
   const [timeLeft, setTimeLeft] = useState<number>(900); // 15 minutos = 900s
   const [reference, setReference] = useState<string>('');
   const [copiedRef, setCopiedRef] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const [simulatingWebhook, setSimulatingWebhook] = useState(false);
   const [selectedBank, setSelectedBank] = useState<string>('bancolombia');
 
-  const PAYMENT_PHONE = '312 456 7890';
   const PAYMENT_NAME = 'PosiUp Streaming Colombia S.A.S';
 
   // Branding configuration & Redirect URLs per gateway
@@ -71,8 +70,7 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30',
       brandGradient: 'from-fuchsia-600 to-pink-600',
       accentText: 'text-fuchsia-400',
-      subtext: 'Envía desde tu app Nequi o portal de recargas directo.',
-      directType: 'Celular Nequi',
+      subtext: 'Pasarela oficial y conexión automática con Nequi.',
       redirectUrl: 'https://recarga.nequi.com.co/',
       appActionText: 'Abrir App Nequi / Portal de Pago'
     },
@@ -82,8 +80,7 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       badgeColor: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
       brandGradient: 'from-rose-600 to-red-600',
       accentText: 'text-rose-400',
-      subtext: 'Pasa plata desde tu app Daviplata o portal de pagos.',
-      directType: 'Número Daviplata',
+      subtext: 'Pasarela oficial y conexión automática con Daviplata.',
       redirectUrl: 'https://portal.daviplata.com/',
       appActionText: 'Abrir App Daviplata / Portal de Pago'
     },
@@ -94,7 +91,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-emerald-600 to-teal-600',
       accentText: 'text-emerald-400',
       subtext: 'Débito seguro desde cualquier banco de Colombia.',
-      directType: 'Pasarela PSE',
       redirectUrl: 'https://registro.pse.com.co/',
       appActionText: 'Ir a la Pasarela Oficial PSE'
     },
@@ -105,7 +101,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-indigo-600 to-blue-600',
       accentText: 'text-indigo-400',
       subtext: 'Transferencia interbancaria inmediata con Llave o Transfiya.',
-      directType: 'Llave Celular',
       redirectUrl: 'https://www.transfiya.com.co/',
       appActionText: 'Abrir Transfiya / Bre-B'
     },
@@ -116,7 +111,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-indigo-600 to-purple-600',
       accentText: 'text-indigo-400',
       subtext: 'Pasarela oficial Bancolombia.',
-      directType: 'Cuenta de Ahorros',
       redirectUrl: 'https://checkout.wompi.co/',
       appActionText: 'Ir a Pasarela Wompi'
     },
@@ -127,7 +121,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-amber-600 to-yellow-600',
       accentText: 'text-amber-400',
       subtext: 'Transferencia directa o App Bancolombia.',
-      directType: 'Cuenta Bancolombia',
       redirectUrl: 'https://www.bancolombia.com/personas',
       appActionText: 'Abrir Sucursal Virtual Bancolombia'
     },
@@ -138,7 +131,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-yellow-600 to-amber-600',
       accentText: 'text-yellow-400',
       subtext: 'Pago cripto USDT TRC20 / BEP20.',
-      directType: 'Binance Pay ID',
       redirectUrl: 'https://pay.binance.com/',
       appActionText: 'Abrir Binance Pay'
     },
@@ -149,7 +141,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       brandGradient: 'from-slate-600 to-slate-700',
       accentText: 'text-slate-300',
       subtext: 'Comprobante manual validado por soporte.',
-      directType: 'Comprobante',
       redirectUrl: 'https://wa.me/573124567890',
       appActionText: 'Enviar Comprobante WhatsApp'
     }
@@ -160,7 +151,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
     brandGradient: 'from-indigo-600 to-purple-600',
     accentText: 'text-indigo-400',
     subtext: 'Acreditación instantánea 24/7.',
-    directType: 'Cuenta',
     redirectUrl: 'https://recarga.nequi.com.co/',
     appActionText: 'Abrir App de Pago'
   };
@@ -178,13 +168,13 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
       // Generate realistic payload according to method
       let qrPayload = '';
       if (gateway === 'nequi') {
-        qrPayload = `nequi://pay?phone=3124567890&amount=${amount}&ref=${uniqueRef}`;
+        qrPayload = `nequi://pay?merchant=PosiUp&amount=${amount}&ref=${uniqueRef}`;
       } else if (gateway === 'daviplata') {
-        qrPayload = `daviplata://transfer?phone=3124567890&amount=${amount}&ref=${uniqueRef}`;
+        qrPayload = `daviplata://pay?merchant=PosiUp&amount=${amount}&ref=${uniqueRef}`;
       } else if (gateway === 'pse') {
         qrPayload = `https://registro.pse.com.co/payment?merchant=PosiUp&amount=${amount}&ref=${uniqueRef}`;
       } else if (gateway === 'llave') {
-        qrPayload = `transfiya://key/3124567890?amount=${amount}&ref=${uniqueRef}&memo=BolsaPosiUp`;
+        qrPayload = `transfiya://key?merchant=PosiUp&amount=${amount}&ref=${uniqueRef}&memo=BolsaPosiUp`;
       } else {
         qrPayload = JSON.stringify({
           gateway: gateway.toUpperCase(),
@@ -230,12 +220,6 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
     navigator.clipboard.writeText(reference);
     setCopiedRef(true);
     setTimeout(() => setCopiedRef(false), 2000);
-  };
-
-  const handleCopyPhone = () => {
-    navigator.clipboard.writeText(PAYMENT_PHONE.replace(/\s+/g, ''));
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 2000);
   };
 
   // Direct Redirection to payment App / Portal
@@ -359,36 +343,23 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
                     <span className="text-[11px] text-slate-400">NIT / Identificación:</span>
                     <span className="font-mono text-emerald-300">901.847.129-4</span>
                   </div>
-                  <div className="flex justify-between items-center text-slate-300">
-                    <span className="text-[11px] text-slate-400">Tipo de Persona:</span>
-                    <span className="text-slate-200">Natural / Jurídica</span>
-                  </div>
                 </div>
               </div>
             ) : (
-              /* Nequi, Daviplata, Llave: Mostrar Celular y Datos directos */
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-left space-y-2.5 text-xs">
+              /* Tarjeta de Conexión Segura con la Pasarela (Sin números de teléfono manuales) */
+              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-left space-y-2 text-xs">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold block">
-                      {gatewayConfig.directType}:
-                    </span>
-                    <strong className="text-base font-mono text-white tracking-wider">
-                      {PAYMENT_PHONE}
-                    </strong>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="font-bold text-white text-xs">Pasarela Automatizada {gatewayConfig.shortName}</span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleCopyPhone}
-                    className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5 text-xs font-semibold cursor-pointer border border-slate-700"
-                  >
-                    {copiedPhone ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    {copiedPhone ? '¡Copiado!' : 'Copiar Número'}
-                  </button>
+                  <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    En Línea 24/7
+                  </span>
                 </div>
-                <div className="text-[11px] text-slate-400 border-t border-slate-800/80 pt-1.5 flex justify-between">
-                  <span>Titular: <strong>{PAYMENT_NAME}</strong></span>
-                  <span className={gatewayConfig.accentText}>Verificado ✓</span>
+                <div className="text-[11px] text-slate-400 border-t border-slate-800/80 pt-1.5 flex justify-between items-center">
+                  <span>Comercio Oficial: <strong>{PAYMENT_NAME}</strong></span>
+                  <span className={gatewayConfig.accentText}>Acreditación Instantánea</span>
                 </div>
               </div>
             )}
@@ -414,7 +385,7 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
             {/* Referencia Única */}
             <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
               <div className="text-left">
-                <span className="text-[10px] text-slate-400 block uppercase">Referencia Única:</span>
+                <span className="text-[10px] text-slate-400 block uppercase">Referencia de Pago:</span>
                 <strong className="text-indigo-300 text-sm font-bold">{reference}</strong>
               </div>
               <button
@@ -423,7 +394,7 @@ export const DynamicQrModal: React.FC<DynamicQrModalProps> = ({
                 className="py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1 text-[11px] cursor-pointer border border-slate-700"
               >
                 {copiedRef ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                {copiedRef ? '¡Copiada!' : 'Copiar Referencia'}
+                {copiedRef ? '¡Copiada!' : 'Copiar Ref'}
               </button>
             </div>
 
