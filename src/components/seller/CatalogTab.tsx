@@ -2,32 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Search,
-  ShoppingCart,
-  Check,
-  Sparkles,
-  Flame,
-  Tv,
-  Film,
-  Youtube,
-  Music,
-  Laptop,
-  TrendingUp,
-  PackageCheck,
-  Info,
-  ChevronLeft,
-  ShieldCheck,
-  Lock,
-  Star,
-  Clock,
-  X,
-  Zap,
-  Award,
-  Monitor,
-  Wifi,
-  Download,
-  Users,
-  PlayCircle
+  Search, ShoppingCart, Check, Sparkles, Flame, Tv, Film, Youtube,
+  Music, Laptop, TrendingUp, PackageCheck, Info, ChevronUp,
+  ShieldCheck, Lock, Star, Clock, X, Monitor, PlayCircle,
+  Wifi, Radio, Headphones, Zap
 } from 'lucide-react';
 import { Product, ProductCategory } from '@/lib/types';
 
@@ -37,183 +15,184 @@ interface CatalogTabProps {
   onAddToCart: (product: Product) => void;
 }
 
-const CATEGORIES: ('Todas' | ProductCategory)[] = [
-  'Todas',
-  'Perfiles / Pantallas',
-  'Cuentas Completas',
-  'Combos Especiales',
-  'Licencias Digitales',
-  'Música y Entretenimiento',
+const CATEGORIES: ('Todas' | ProductCategory | 'IPTV & TV' | 'Música & Vídeo')[] = [
+  'Todas', 'Streaming', 'IPTV & TV', 'Música & Vídeo',
 ];
 
 // ── Brand visual config ────────────────────────────────────────────────────
-const BRAND: Record<string, {
-  gradient: string;       // card banner gradient (CSS)
-  glow: string;           // glow color rgba
-  accent: string;         // hex color
-  bg: string;             // dark bg tint
-  label: string;          // display label
-  tagline: string;        // short promo tagline
-  rules: string[];
-  guarantee: string;
-  support: string;
-}> = {
-  netflix: {
-    gradient: 'linear-gradient(135deg, #1a0000 0%, #6b0000 45%, #E50914 100%)',
-    glow: 'rgba(229,9,20,0.55)',
-    accent: '#E50914',
-    bg: 'from-red-950/30',
-    label: 'NETFLIX',
-    tagline: 'Perfil Privado con PIN · 4K Ultra HD',
-    rules: ['1 dispositivo simultáneo por perfil','No modificar la contraseña madre de la cuenta','Usar el PIN de perfil asignado','Reportar si solicitan código de hogar'],
-    guarantee: '30 días garantizados. Perfil caído o clave cambiada → reemplazo sin costo.',
-    support: 'Soporte 7/7 · Respuesta < 4 h · Reemplazo automático < 2 h',
+type BrandConfig = {
+  gradient: string; glow: string; accent: string;
+  label: string; tagline: string; badge?: string;
+  rules: string[]; guarantee: string; support: string;
+};
+
+const BRAND: Record<string, BrandConfig> = {
+  'netflix original': {
+    gradient: 'linear-gradient(135deg, #1a0000 0%, #7a0000 50%, #E50914 100%)',
+    glow: 'rgba(229,9,20,0.55)', accent: '#E50914',
+    label: 'NETFLIX ORIGINAL', tagline: '4K Ultra HD · PIN Privado · Cuenta Original',
+    badge: '⭐ MÁS VENDIDO',
+    rules: ['1 dispositivo por pantalla', 'No modificar contraseña madre', 'Usar PIN de perfil asignado', 'Reportar si solicitan código de hogar'],
+    guarantee: '30 días. Perfil caído o clave cambiada → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM · Respuesta < 2 h',
   },
-  youtube: {
-    gradient: 'linear-gradient(135deg, #1a0000 0%, #7a0000 45%, #FF0000 100%)',
-    glow: 'rgba(255,0,0,0.50)',
-    accent: '#FF0000',
-    bg: 'from-red-950/20',
-    label: 'YOUTUBE',
-    tagline: 'Premium Individual · Sin Publicidad',
-    rules: ['Activar en tu correo Google personal','No compartir acceso con terceros','No modificar configuración de suscripción'],
-    guarantee: '30 días de membresía activa garantizada.',
-    support: 'Soporte por ticket · Respuesta < 6 h · Reactivación sin costo',
+  'netflix extra': {
+    gradient: 'linear-gradient(135deg, #1a0000 0%, #800000 50%, #CC0000 100%)',
+    glow: 'rgba(204,0,0,0.50)', accent: '#CC0000',
+    label: 'NETFLIX EXTRA', tagline: 'Miembro Extra Oficial · Perfil Propio',
+    badge: '🔥 ALTA DEMANDA',
+    rules: ['Perfil independiente del administrador', 'No modificar datos de facturación', 'Acceso desde tu correo personal'],
+    guarantee: '30 días garantizados. Reemplazo sin costo si el cupo extra es removido.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  netflix: {
+    gradient: 'linear-gradient(135deg, #160000 0%, #6b0000 50%, #E50914 100%)',
+    glow: 'rgba(229,9,20,0.45)', accent: '#E50914',
+    label: 'NETFLIX', tagline: 'Catálogo Completo · Uso Libre',
+    rules: ['Uso libre en pantalla asignada', 'No cambiar la cuenta de correo principal', 'Reportar incidencias dentro de las 24 h'],
+    guarantee: '30 días garantizados. Reemplazo inmediato si la pantalla deja de funcionar.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  'stella tv': {
+    gradient: 'linear-gradient(135deg, #0d0018 0%, #3b0066 50%, #8B5CF6 100%)',
+    glow: 'rgba(139,92,246,0.55)', accent: '#8B5CF6',
+    label: 'STELLA TV', tagline: '+500 Canales en Vivo · Deportes & VOD',
+    badge: '⚽ DEPORTES & CANALES VIVO',
+    rules: ['Uso en dispositivos autorizados', 'No compartir credenciales masivamente', 'Reiniciar app si hay buffering'],
+    guarantee: '30 días. Canal caído o acceso bloqueado → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  jellyfin: {
+    gradient: 'linear-gradient(135deg, #0a0016 0%, #2d006b 50%, #7C3AED 100%)',
+    glow: 'rgba(124,58,237,0.55)', accent: '#7C3AED',
+    label: 'JELLYFIN', tagline: 'Servidor Privado · Series & Películas · Canales',
+    badge: '⚽ DEPORTES & CANALES VIVO',
+    rules: ['No compartir credenciales con terceros externos', 'Máximo de dispositivos según plan contratado', 'Reportar caídas en < 24 h'],
+    guarantee: '30 días. Acceso bloqueado → reemplazo del acceso sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  emby: {
+    gradient: 'linear-gradient(135deg, #001a0a 0%, #004d1f 50%, #52B788 100%)',
+    glow: 'rgba(82,183,136,0.50)', accent: '#52B788',
+    label: 'EMBY', tagline: 'Servidor Premium · Canales & VOD',
+    badge: '⚽ DEPORTES & CANALES VIVO',
+    rules: ['Uso en el dispositivo asignado', 'No modificar configuración del servidor', 'Canal no disponible → ticket de soporte'],
+    guarantee: '30 días garantizados. Reemplazo por fallas del servidor.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  'iptv win+': {
+    gradient: 'linear-gradient(135deg, #1a0800 0%, #7a3000 50%, #F97316 100%)',
+    glow: 'rgba(249,115,22,0.55)', accent: '#F97316',
+    label: 'IPTV + WIN SPORTS+', tagline: 'Canales Premium · Fútbol Colombiano Win+',
+    badge: '⚽ DEPORTES & CANALES VIVO',
+    rules: ['Win Sports+ requiere conexión estable', 'No compartir credenciales de acceso', 'Usar app autorizada para el plan'],
+    guarantee: '30 días. Si Win+ no disponible → reemplazo o reembolso proporcional.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM · Prioridad deportes',
+  },
+  plex: {
+    gradient: 'linear-gradient(135deg, #1a1000 0%, #7a5000 50%, #E5A00D 100%)',
+    glow: 'rgba(229,160,13,0.50)', accent: '#E5A00D',
+    label: 'PLEX', tagline: 'Catálogo Amplio · Canales Incluidos',
+    badge: '📺 STREAMING & TV',
+    rules: ['Uso en dispositivos Plex compatibles', 'No revocar permisos del servidor', 'Reportar error en < 24 h'],
+    guarantee: '30 días. Acceso perdido → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
   },
   'disney+': {
-    gradient: 'linear-gradient(135deg, #00001a 0%, #000b6b 45%, #113CCF 100%)',
-    glow: 'rgba(17,60,207,0.60)',
-    accent: '#113CCF',
-    bg: 'from-blue-950/30',
-    label: 'DISNEY+',
-    tagline: 'Perfil 4K · Disney, Marvel, Star Wars',
-    rules: ['1 perfil privado asignado — no cambiar nombre','No acceder al perfil del administrador','Resolución 4K con Dolby Vision incluido'],
-    guarantee: '30 días. Reemplazo si la cuenta es cerrada por la plataforma.',
-    support: 'Soporte · Respuesta < 3 h · Cuenta de respaldo < 1 h',
+    gradient: 'linear-gradient(135deg, #000a1a 0%, #00304a 50%, #00637C 100%)',
+    glow: 'rgba(0,99,124,0.60)', accent: '#00637C',
+    label: 'DISNEY+', tagline: 'Disney · Marvel · Star Wars · ESPN',
+    badge: '🏆 PREMIUM + ESPN',
+    rules: ['No cambiar nombre ni avatar del perfil', 'No acceder al perfil del administrador', 'Resolución 4K con Dolby Vision disponible'],
+    guarantee: '30 días. Perfil eliminado → reemplazo < 1 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  'prime video': {
+    gradient: 'linear-gradient(135deg, #001a1a 0%, #005a7a 50%, #00A8E1 100%)',
+    glow: 'rgba(0,168,225,0.55)', accent: '#00A8E1',
+    label: 'PRIME VIDEO', tagline: 'Amazon Originals · HD & 4K',
+    rules: ['No compartir credenciales fuera del hogar', 'No modificar método de pago', 'Acceso a Prime Music incluido en cuenta original'],
+    guarantee: '30 días. Acceso revocado → reemplazo o reembolso.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  'hbo max': {
+    gradient: 'linear-gradient(135deg, #0d001a 0%, #3d0066 50%, #7B2FBE 100%)',
+    glow: 'rgba(123,47,190,0.60)', accent: '#7B2FBE',
+    label: 'HBO MAX', tagline: 'HBO Originals · Warner · DC · 4K HDR',
+    rules: ['Uso del perfil asignado únicamente', 'No modificar configuración de la cuenta', '4K requiere plan Platino en algunos casos'],
+    guarantee: '30 días. Perfil caído → reemplazo en < 2 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  'paramount+': {
+    gradient: 'linear-gradient(135deg, #00001a 0%, #00006b 50%, #0064FF 100%)',
+    glow: 'rgba(0,100,255,0.55)', accent: '#0064FF',
+    label: 'PARAMOUNT+', tagline: 'Series Exclusivas · Deportes · Películas',
+    rules: ['Uso del perfil asignado', 'No compartir con múltiples usuarios externos', 'Reportar incidencias en < 24 h'],
+    guarantee: '30 días garantizados. Reemplazo por fallas de acceso.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  crunchyroll: {
+    gradient: 'linear-gradient(135deg, #1a0500 0%, #7a2800 50%, #FF6600 100%)',
+    glow: 'rgba(255,102,0,0.60)', accent: '#FF6600',
+    label: 'CRUNCHYROLL', tagline: 'Todo el Anime · Simulcast Japón 🐉',
+    badge: '🐉 ANIME PREMIUM',
+    rules: ['No compartir cuenta fuera del plan contratado', 'Simulcast disponible al día siguiente de emisión en JP', 'Máximo de dispositivos según plan'],
+    guarantee: '30 días. Acceso perdido → reemplazo en < 2 h.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  vix: {
+    gradient: 'linear-gradient(135deg, #1a001a 0%, #6b0066 50%, #D946EF 100%)',
+    glow: 'rgba(217,70,239,0.55)', accent: '#D946EF',
+    label: 'VIX', tagline: 'Contenido Latino Premium · Novelas & Deportes',
+    rules: ['Uso en dispositivos ViX compatibles', 'No modificar datos de la cuenta', 'Contenido en español exclusivo'],
+    guarantee: '30 días. Acceso bloqueado → reemplazo sin costo.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
+  },
+  youtube: {
+    gradient: 'linear-gradient(135deg, #1a0000 0%, #7a0000 50%, #FF0000 100%)',
+    glow: 'rgba(255,0,0,0.50)', accent: '#FF0000',
+    label: 'YOUTUBE PREMIUM', tagline: 'Sin Anuncios · YouTube Music Incluido 🎼',
+    badge: '🎼 MÚSICA & AD-FREE',
+    rules: ['Activar en tu correo Google personal', 'No compartir acceso con terceros', 'Compatible con Chromecast y Smart TV'],
+    guarantee: '30 días garantizados. Reactivación sin costo si el período no venció.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
   },
   spotify: {
-    gradient: 'linear-gradient(135deg, #001a06 0%, #006b1e 45%, #1DB954 100%)',
-    glow: 'rgba(29,185,84,0.55)',
-    accent: '#1DB954',
-    bg: 'from-emerald-950/30',
-    label: 'SPOTIFY',
-    tagline: 'Premium Individual · Música sin límites',
-    rules: ['Activar Premium en tu cuenta existente','No modificar método de pago','Máximo 3 dispositivos activos'],
-    guarantee: '30 días garantizados. Renovación si Spotify suspende.',
-    support: 'Soporte por ticket · SLA < 6 h · Renovación mayorista disponible',
-  },
-  'amazon prime': {
-    gradient: 'linear-gradient(135deg, #001a1a 0%, #005f7a 45%, #00A8E1 100%)',
-    glow: 'rgba(0,168,225,0.55)',
-    accent: '#00A8E1',
-    bg: 'from-cyan-950/30',
-    label: 'PRIME VIDEO',
-    tagline: 'Cuenta Completa · 3 Pantallas 4K',
-    rules: ['Uso en hasta 3 dispositivos simultáneos','No modificar datos de la cuenta principal','Acceso a Prime Music y Prime Reading incluido'],
-    guarantee: '30 días. Reemplazo de cuenta si acceso es revocado.',
-    support: 'Soporte · Respuesta < 4 h · Sin costo de reemplazo',
-  },
-  max: {
-    gradient: 'linear-gradient(135deg, #0d001a 0%, #4a006b 45%, #7B2FBE 100%)',
-    glow: 'rgba(123,47,190,0.60)',
-    accent: '#7B2FBE',
-    bg: 'from-purple-950/30',
-    label: 'MAX (HBO)',
-    tagline: 'Perfil Privado · Series Originales HBO',
-    rules: ['1 perfil exclusivo asignado','No cambiar idioma de interfaz','4K HDR disponible en dispositivos compatibles'],
-    guarantee: '30 días. Reemplazo inmediato si el perfil es eliminado.',
-    support: 'Soporte 7/7 · Respuesta < 3 h',
-  },
-  canva: {
-    gradient: 'linear-gradient(135deg, #001a1a 0%, #006b6b 45%, #00C4CC 100%)',
-    glow: 'rgba(0,196,204,0.50)',
-    accent: '#00C4CC',
-    bg: 'from-cyan-950/30',
-    label: 'CANVA PRO',
-    tagline: 'Licencia Pro · Diseño sin límites',
-    rules: ['Uso individual en tu cuenta de Canva','No transferir la membresía a terceros','Descarga ilimitada de recursos premium'],
-    guarantee: '30 días. Reactivación sin costo si la licencia caduca antes.',
-    support: 'Soporte · Respuesta < 8 h',
-  },
-  'combo b2b': {
-    gradient: 'linear-gradient(135deg, #1a0e00 0%, #8a4a00 45%, #F59E0B 100%)',
-    glow: 'rgba(245,158,11,0.55)',
-    accent: '#F59E0B',
-    bg: 'from-amber-950/30',
-    label: 'COMBO B2B',
-    tagline: 'Pack Multi-Servicio · Máximo Margen',
-    rules: ['Entrega de cada servicio por separado','Soporte individual por cada plataforma incluida','Vigencia unificada para todos los servicios'],
-    guarantee: '30 días por cada servicio incluido en el combo.',
-    support: 'Soporte · Respuesta < 4 h · Gestor B2B dedicado',
+    gradient: 'linear-gradient(135deg, #001a08 0%, #006b22 50%, #1DB954 100%)',
+    glow: 'rgba(29,185,84,0.55)', accent: '#1DB954',
+    label: 'SPOTIFY', tagline: 'Música Premium · 320 kbps · Sin Anuncios 🎼',
+    badge: '🎼 MÚSICA & AD-FREE',
+    rules: ['Activar Premium en tu cuenta existente', 'No modificar método de pago', 'Compatible con Alexa, Chromecast y más'],
+    guarantee: '30 días garantizados. Renovación sin costo si Spotify suspende.', support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
   },
 };
 
-const DEFAULT_BRAND = {
-  gradient: 'linear-gradient(135deg, #0d0d1a 0%, #1e1e4a 45%, #6366F1 100%)',
-  glow: 'rgba(99,102,241,0.50)',
-  accent: '#6366F1',
-  bg: 'from-indigo-950/30',
-  label: 'STREAMING',
-  tagline: 'Servicio Digital · Entrega Inmediata',
-  rules: ['Uso personal o reventa individual','No compartir con usuarios no autorizados','Reportar incidencias en < 24 h'],
+const DEFAULT_BRAND: BrandConfig = {
+  gradient: 'linear-gradient(135deg, #0d0d1a 0%, #1e1e4a 50%, #6366F1 100%)',
+  glow: 'rgba(99,102,241,0.50)', accent: '#6366F1',
+  label: 'STREAMING', tagline: 'Servicio Digital · Entrega Inmediata',
+  rules: ['Uso personal o reventa individual', 'No compartir con usuarios no autorizados', 'Reportar incidencias en < 24 h'],
   guarantee: '30 días garantizados. Reemplazo o reembolso proporcional.',
-  support: 'Soporte 7/7 · Respuesta < 8 h',
+  support: 'Lunes a Domingo · 9:00 AM – 8:30 PM',
 };
 
-const getBrand = (brand: string) => BRAND[brand.toLowerCase()] ?? DEFAULT_BRAND;
+const getBrand = (brand: string): BrandConfig => BRAND[brand.toLowerCase()] ?? DEFAULT_BRAND;
 
-const getBrandIcon = (brand: string, cls = 'w-12 h-12') => {
-  const color: Record<string, string> = {
-    netflix: 'text-red-400', youtube: 'text-red-400', 'disney+': 'text-blue-300',
-    spotify: 'text-emerald-400', 'amazon prime': 'text-cyan-400',
-    max: 'text-purple-400', canva: 'text-cyan-400', 'combo b2b': 'text-amber-400',
-  };
-  const c = color[brand.toLowerCase()] ?? 'text-indigo-400';
-  switch (brand.toLowerCase()) {
-    case 'netflix':      return <Tv       className={`${cls} ${c}`} />;
-    case 'youtube':      return <Youtube  className={`${cls} ${c}`} />;
-    case 'disney+':      return <Film     className={`${cls} ${c}`} />;
-    case 'spotify':      return <Music    className={`${cls} ${c}`} />;
-    case 'amazon prime': return <PlayCircle className={`${cls} ${c}`} />;
-    case 'max':          return <Monitor  className={`${cls} ${c}`} />;
-    case 'canva':        return <Laptop   className={`${cls} ${c}`} />;
-    case 'combo b2b':    return <Flame    className={`${cls} ${c}`} />;
-    default:             return <Sparkles className={`${cls} ${c}`} />;
-  }
+const getBrandIcon = (brand: string, cls = 'w-8 h-8') => {
+  const b = brand.toLowerCase();
+  if (b.includes('netflix'))   return <Tv          className={`${cls} text-red-400`}     />;
+  if (b === 'youtube')         return <Youtube     className={`${cls} text-red-400`}     />;
+  if (b === 'disney+')         return <Film        className={`${cls} text-cyan-300`}    />;
+  if (b === 'spotify')         return <Music       className={`${cls} text-emerald-400`} />;
+  if (b === 'prime video')     return <PlayCircle  className={`${cls} text-cyan-400`}    />;
+  if (b === 'hbo max')         return <Monitor     className={`${cls} text-purple-400`}  />;
+  if (b === 'paramount+')      return <Sparkles    className={`${cls} text-blue-400`}    />;
+  if (b === 'crunchyroll')     return <Sparkles    className={`${cls} text-orange-400`}  />;
+  if (b === 'vix')             return <Film        className={`${cls} text-fuchsia-400`} />;
+  if (b === 'stella tv')       return <Radio       className={`${cls} text-violet-400`}  />;
+  if (b === 'jellyfin')        return <Wifi        className={`${cls} text-purple-400`}  />;
+  if (b === 'emby')            return <Wifi        className={`${cls} text-emerald-400`} />;
+  if (b === 'iptv win+')       return <Tv          className={`${cls} text-orange-400`}  />;
+  if (b === 'plex')            return <PlayCircle  className={`${cls} text-amber-400`}   />;
+  return                              <Sparkles    className={`${cls} text-indigo-400`}  />;
 };
 
-const getSmallIcon = (brand: string) => {
-  const cls = 'w-4 h-4';
-  switch (brand.toLowerCase()) {
-    case 'netflix':      return <Tv       className={`${cls} text-red-400`}     />;
-    case 'youtube':      return <Youtube  className={`${cls} text-red-400`}     />;
-    case 'disney+':      return <Film     className={`${cls} text-blue-400`}    />;
-    case 'spotify':      return <Music    className={`${cls} text-emerald-400`} />;
-    case 'amazon prime': return <PlayCircle className={`${cls} text-cyan-400`}  />;
-    case 'max':          return <Monitor  className={`${cls} text-purple-400`}  />;
-    case 'canva':        return <Laptop   className={`${cls} text-cyan-400`}    />;
-    case 'combo b2b':    return <Flame    className={`${cls} text-amber-400`}   />;
-    default:             return <Sparkles className={`${cls} text-indigo-400`}  />;
-  }
-};
-
-// ── Detail Overlay (centered card expansion) ──────────────────────────────
-interface DetailOverlayProps {
-  product: Product;
-  stock: number;
-  isAdded: boolean;
-  onClose: () => void;
-  onAddToCart: () => void;
+// ── Detail Overlay ─────────────────────────────────────────────────────────
+interface OverlayProps {
+  product: Product; stock: number; isAdded: boolean;
+  onClose: () => void; onAddToCart: () => void;
 }
 
-const DetailOverlay: React.FC<DetailOverlayProps> = ({
-  product, stock, isAdded, onClose, onAddToCart,
-}) => {
+const DetailOverlay: React.FC<OverlayProps> = ({ product, stock, isAdded, onClose, onAddToCart }) => {
   const cfg = getBrand(product.brand);
   const profit = product.suggested_price - product.reseller_price;
   const profitPct = Math.round((profit / product.reseller_price) * 100);
 
-  // lock body scroll
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
@@ -221,114 +200,66 @@ const DetailOverlay: React.FC<DetailOverlayProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-700/50 animate-scale-in"
-        style={{ boxShadow: `0 0 60px ${cfg.glow}, 0 20px 60px rgba(0,0,0,0.8)` }}
+        className="relative w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-700/40 animate-scale-in"
+        style={{ boxShadow: `0 0 60px ${cfg.glow}, 0 20px 60px rgba(0,0,0,0.9)` }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Banner image-like header ── */}
-        <div
-          className="relative h-44 flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: cfg.gradient }}
-        >
-          {/* Glow blob */}
-          <div
-            className="absolute inset-0 opacity-40 blur-3xl"
-            style={{ background: cfg.gradient }}
-          />
-          {/* Grid pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `linear-gradient(${cfg.accent}33 1px, transparent 1px), linear-gradient(90deg, ${cfg.accent}33 1px, transparent 1px)`,
-              backgroundSize: '24px 24px',
-            }}
-          />
-          {/* Radial highlight */}
-          <div
-            className="absolute inset-0"
-            style={{ background: `radial-gradient(ellipse at center, ${cfg.accent}30 0%, transparent 70%)` }}
-          />
+        {/* Banner header */}
+        <div className="relative h-44 flex flex-col items-center justify-center overflow-hidden" style={{ background: cfg.gradient }}>
+          <div className="absolute inset-0 opacity-15" style={{ backgroundImage: `linear-gradient(${cfg.accent}44 1px, transparent 1px), linear-gradient(90deg, ${cfg.accent}44 1px, transparent 1px)`, backgroundSize: '22px 22px' }} />
+          <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at center, ${cfg.accent}35 0%, transparent 65%)` }} />
 
-          {/* Close */}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white/70 hover:text-white flex items-center justify-center transition border border-white/10"
-          >
+          <button onClick={onClose} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 text-white/70 hover:text-white flex items-center justify-center border border-white/10 transition">
             <X className="w-4 h-4" />
           </button>
 
-          {/* Brand label top-left */}
-          <span
-            className="absolute top-3 left-4 text-[10px] font-extrabold tracking-widest px-2.5 py-0.5 rounded-full border"
-            style={{ color: cfg.accent, borderColor: cfg.accent + '60', background: 'rgba(0,0,0,0.50)' }}
-          >
+          <span className="absolute top-3 left-4 text-[10px] font-extrabold tracking-widest px-2.5 py-0.5 rounded-full border" style={{ color: cfg.accent, borderColor: cfg.accent + '60', background: 'rgba(0,0,0,0.55)' }}>
             {cfg.label}
           </span>
 
-          {/* Big icon */}
           <div className="relative z-10 flex flex-col items-center gap-2">
-            <div
-              className="p-4 rounded-3xl border"
-              style={{
-                background: cfg.accent + '22',
-                borderColor: cfg.accent + '50',
-                boxShadow: `0 0 32px ${cfg.glow}`,
-              }}
-            >
+            <div className="p-3.5 rounded-3xl border" style={{ background: cfg.accent + '22', borderColor: cfg.accent + '50', boxShadow: `0 0 32px ${cfg.glow}` }}>
               {getBrandIcon(product.brand, 'w-14 h-14')}
             </div>
-            <span className="text-white/60 text-xs font-medium">{cfg.tagline}</span>
+            <span className="text-white/60 text-xs font-medium text-center px-4">{cfg.tagline}</span>
           </div>
         </div>
 
-        {/* ── Body ── */}
-        <div className="bg-slate-950 p-5 space-y-4 max-h-[55vh] overflow-y-auto">
-
-          {/* Title + duration */}
+        {/* Body */}
+        <div className="bg-slate-950 p-5 space-y-3.5 max-h-[55vh] overflow-y-auto">
           <div>
-            <h2 className="text-xl font-extrabold text-white leading-tight">{product.name}</h2>
+            <h2 className="text-lg font-extrabold text-white leading-tight">{product.name}</h2>
             <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
-              {product.duration_days} días continuos de servicio garantizado
+              <Clock className="w-3 h-3 text-indigo-400" /> {product.duration_days} días continuos · Garantía activa Lun–Dom 9 AM – 8:30 PM
             </p>
           </div>
 
-          {/* Stock + price row */}
+          {/* Stock + precio */}
           <div className="flex items-center justify-between">
-            <span
-              className={`px-3 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 ${
-                stock > 0
-                  ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-400'
-                  : 'bg-rose-950/60 border-rose-500/40 text-rose-400'
-              }`}
-            >
+            <span className={`px-3 py-1 rounded-full text-[11px] font-bold border flex items-center gap-1.5 ${stock > 0 ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-400' : 'bg-rose-950/60 border-rose-500/40 text-rose-400'}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${stock > 0 ? 'bg-emerald-400 animate-ping' : 'bg-rose-400'}`} />
-              {stock > 0 ? `${stock} en stock · Entrega inmediata` : 'Sin stock disponible'}
+              {stock > 0 ? `${stock} disponible${stock !== 1 ? 's' : ''} · Entrega inmediata` : 'Sin stock'}
             </span>
             <div className="text-right">
-              <span className="text-2xl font-mono font-extrabold text-white">
-                ${product.reseller_price.toLocaleString('es-CO')}
-              </span>
+              <span className="text-2xl font-mono font-extrabold text-white">${product.reseller_price.toLocaleString('es-CO')}</span>
               <span className="text-xs text-slate-500 ml-1">COP</span>
             </div>
           </div>
 
-          {/* Margin callout */}
-          <div
-            className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl border text-sm"
-            style={{ background: cfg.accent + '12', borderColor: cfg.accent + '30' }}
-          >
-            <span className="text-slate-300 flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-              Tu margen estimado:
-            </span>
-            <span className="font-mono font-extrabold text-emerald-400">
-              +${profit.toLocaleString('es-CO')} ({profitPct}%)
-            </span>
+          {/* Margen */}
+          <div className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl border text-sm" style={{ background: cfg.accent + '12', borderColor: cfg.accent + '30' }}>
+            <span className="text-slate-300 flex items-center gap-1.5"><TrendingUp className="w-4 h-4 text-emerald-400" /> Tu margen:</span>
+            <span className="font-mono font-extrabold text-emerald-400">+${profit.toLocaleString('es-CO')} ({profitPct}%)</span>
+          </div>
+
+          {/* P. sugerido */}
+          <div className="flex justify-between text-xs text-slate-500 px-1">
+            <span>Precio sugerido al cliente final:</span>
+            <span className="font-mono text-slate-400 line-through">${product.suggested_price.toLocaleString('es-CO')} COP</span>
           </div>
 
           {/* Description */}
@@ -336,79 +267,46 @@ const DetailOverlay: React.FC<DetailOverlayProps> = ({
 
           {/* Features */}
           <div>
-            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
-              <Star className="w-3.5 h-3.5 text-amber-400" /> Incluye
-            </p>
+            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-amber-400" /> Especificaciones del Plan</p>
             <div className="flex flex-wrap gap-1.5">
               {product.features.map((f, i) => (
-                <span key={i} className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300">
-                  ✓ {f}
-                </span>
+                <span key={i} className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300">✓ {f}</span>
               ))}
             </div>
           </div>
 
           {/* Rules */}
           <div>
-            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-amber-400" /> Reglas de uso para tu cliente
-            </p>
+            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5"><Lock className="w-3.5 h-3.5 text-amber-400" /> Reglas de Uso para tu Cliente</p>
             <div className="p-3 rounded-2xl bg-amber-950/20 border border-amber-500/20 space-y-1.5">
               {cfg.rules.map((r, i) => (
-                <p key={i} className="text-xs text-slate-300 flex gap-2">
-                  <span className="text-amber-400 font-bold flex-shrink-0">›</span>{r}
-                </p>
+                <p key={i} className="text-xs text-slate-300 flex gap-2"><span className="text-amber-400 font-bold flex-shrink-0">›</span>{r}</p>
               ))}
             </div>
           </div>
 
           {/* Guarantee & Support */}
           <div>
-            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Garantía & Soporte
-            </p>
+            <p className="text-[10px] font-bold uppercase text-slate-500 mb-2 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Garantía & Soporte</p>
             <div className="p-3 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 space-y-1.5">
-              <p className="text-xs text-slate-300">
-                <span className="text-emerald-400 font-bold">Garantía: </span>{cfg.guarantee}
-              </p>
-              <p className="text-xs text-slate-400">
-                <span className="text-indigo-400 font-bold">Soporte: </span>{cfg.support}
-              </p>
+              <p className="text-xs text-slate-300"><span className="text-emerald-400 font-bold">Garantía: </span>{cfg.guarantee}</p>
+              <p className="text-xs text-slate-400"><span className="text-indigo-400 font-bold">Soporte: </span>{cfg.support}</p>
             </div>
           </div>
         </div>
 
-        {/* ── Fixed CTA ── */}
+        {/* CTA fijo */}
         <div className="bg-slate-950 px-5 py-4 border-t border-slate-800 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-sm font-semibold border border-slate-800 transition"
-          >
+          <button onClick={onClose} className="flex-1 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-sm font-semibold border border-slate-800 transition">
             ← Volver
           </button>
           <button
             onClick={() => { onAddToCart(); onClose(); }}
             disabled={stock === 0 || isAdded}
-            className={`flex-[2] py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition ${
-              stock === 0
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : isAdded
-                ? 'bg-emerald-600 text-white'
-                : 'text-white active:scale-95'
-            }`}
-            style={
-              stock > 0 && !isAdded
-                ? { background: `linear-gradient(135deg, ${cfg.accent}ee, ${cfg.accent}aa)`, boxShadow: `0 4px 20px ${cfg.glow}` }
-                : {}
-            }
+            className={`flex-[2] py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition ${stock === 0 ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : isAdded ? 'bg-emerald-600 text-white' : 'text-white active:scale-95'}`}
+            style={stock > 0 && !isAdded ? { background: `linear-gradient(135deg, ${cfg.accent}ee, ${cfg.accent}99)`, boxShadow: `0 4px 20px ${cfg.glow}` } : {}}
           >
-            {isAdded ? (
-              <><Check className="w-4 h-4" /> ¡Agregado al Carrito!</>
-            ) : stock === 0 ? (
-              'Sin Stock Disponible'
-            ) : (
-              <><ShoppingCart className="w-4 h-4" /> Agregar — ${product.reseller_price.toLocaleString('es-CO')} COP</>
-            )}
+            {isAdded ? <><Check className="w-4 h-4" /> ¡Agregado!</> : stock === 0 ? 'Sin Stock' : <><ShoppingCart className="w-4 h-4" /> Agregar — ${product.reseller_price.toLocaleString('es-CO')} COP</>}
           </button>
         </div>
       </div>
@@ -417,10 +315,8 @@ const DetailOverlay: React.FC<DetailOverlayProps> = ({
 };
 
 // ── Main Component ─────────────────────────────────────────────────────────
-export const CatalogTab: React.FC<CatalogTabProps> = ({
-  products, inventoryCounts, onAddToCart,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<'Todas' | ProductCategory>('Todas');
+export const CatalogTab: React.FC<CatalogTabProps> = ({ products, inventoryCounts, onAddToCart }) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [searchQuery, setSearchQuery] = useState('');
   const [addedId, setAddedId] = useState<string | null>(null);
   const [detailProduct, setDetailProduct] = useState<Product | null>(null);
@@ -438,47 +334,53 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
+
+      {/* ── Banner Horarios ─────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 px-4 py-3 rounded-2xl bg-slate-900/80 border border-emerald-500/20 text-xs">
+        <span className="flex items-center gap-1.5 text-emerald-400 font-bold whitespace-nowrap">
+          🟢 Ventas: <span className="text-slate-300 font-medium">9:00 AM – 10:00 PM</span>
+        </span>
+        <span className="hidden sm:block text-slate-700">|</span>
+        <span className="flex items-center gap-1.5 text-indigo-400 font-bold whitespace-nowrap">
+          🛠️ Soporte & Garantías: <span className="text-slate-300 font-medium">9:00 AM – 8:30 PM</span>
+        </span>
+        <span className="hidden sm:block text-slate-700">|</span>
+        <span className="text-slate-500 font-medium">Lunes a Domingo · Atención ininterrumpida</span>
+      </div>
 
       {/* ── Hero Banner ─────────────────────────────────────────── */}
       <div className="relative overflow-hidden rounded-3xl p-5 sm:p-7 bg-gradient-to-r from-indigo-950/80 via-slate-900/90 to-purple-950/80 border border-indigo-500/20 shadow-2xl">
         <div className="relative z-10 max-w-2xl space-y-1.5">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase tracking-wider border border-indigo-500/30">
-            <Sparkles className="w-3 h-3" /> Catálogo Exclusivo Mayorista
+            <Sparkles className="w-3 h-3" /> Catálogo Exclusivo Mayorista N.T.O.
           </span>
           <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-            Cuentas, Perfiles y Licencias · Entrega Inmediata ⚡
+            Netflix · Disney+ · HBO Max · Crunchyroll · IPTV · Spotify y más ⚡
           </h2>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            Precio de distribuidor · Márgenes hasta <strong className="text-emerald-400">150%</strong> · Credenciales en segundos.
+          <p className="text-xs text-slate-300">
+            Precio de distribuidor · Márgenes hasta <strong className="text-emerald-400">150%</strong> · Entrega de credenciales en segundos.
           </p>
         </div>
-        <Tv className="absolute right-4 bottom-0 translate-y-4 opacity-10 w-56 h-56 text-indigo-400 pointer-events-none" />
+        <Tv className="absolute right-4 bottom-0 translate-y-4 opacity-10 w-52 h-52 text-indigo-400 pointer-events-none" />
       </div>
 
-      {/* ── Search & Category Filters ────────────────────────────── */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      {/* ── Search & Filters ─────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
           <input
             type="text"
-            placeholder="Buscar: Netflix, Spotify, Disney+..."
+            placeholder="Buscar: Netflix, Disney+, Crunchyroll, IPTV..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 text-xs placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
           />
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-wrap">
           {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap border transition ${
-                selectedCategory === cat
-                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-indigo-600/30 shadow-md'
-                  : 'bg-slate-900/70 border-slate-800 text-slate-400 hover:text-slate-200'
-              }`}
-            >
+            <button key={cat} onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold whitespace-nowrap border transition ${selectedCategory === cat ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/30' : 'bg-slate-900/70 border-slate-800 text-slate-400 hover:text-slate-200'}`}>
               {cat}
             </button>
           ))}
@@ -498,84 +400,53 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({
             <div
               key={prod.id}
               className="glass-panel rounded-2xl border border-slate-800 overflow-hidden flex flex-col group transition-all duration-200 hover:border-slate-600 hover:-translate-y-0.5"
-              style={{ '--glow': cfg.glow } as React.CSSProperties}
             >
-              {/* ── Visual Banner (image-like) ── */}
+              {/* Visual banner */}
               <div
-                className="relative h-28 flex items-center justify-center overflow-hidden cursor-pointer"
+                className="relative h-28 flex flex-col items-center justify-center overflow-hidden cursor-pointer"
                 style={{ background: cfg.gradient }}
                 onClick={() => setDetailProduct(prod)}
               >
                 {/* Grid pattern */}
-                <div
-                  className="absolute inset-0 opacity-15"
-                  style={{
-                    backgroundImage: `linear-gradient(${cfg.accent}44 1px, transparent 1px), linear-gradient(90deg, ${cfg.accent}44 1px, transparent 1px)`,
-                    backgroundSize: '20px 20px',
-                  }}
-                />
-                {/* Radial glow */}
-                <div
-                  className="absolute inset-0"
-                  style={{ background: `radial-gradient(ellipse at center, ${cfg.accent}35 0%, transparent 65%)` }}
-                />
+                <div className="absolute inset-0 opacity-15" style={{ backgroundImage: `linear-gradient(${cfg.accent}44 1px, transparent 1px), linear-gradient(90deg, ${cfg.accent}44 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at center, ${cfg.accent}35 0%, transparent 65%)` }} />
 
-                {/* Brand label */}
-                <span
-                  className="absolute top-2 left-2.5 text-[9px] font-extrabold tracking-widest px-2 py-0.5 rounded-full"
-                  style={{ color: cfg.accent, background: 'rgba(0,0,0,0.55)' }}
-                >
-                  {cfg.label}
-                </span>
+                {/* Badge */}
+                {cfg.badge && (
+                  <span className="absolute top-2 left-2 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full bg-black/60 text-white border border-white/20 leading-tight">
+                    {cfg.badge}
+                  </span>
+                )}
 
-                {/* Stock badge top-right */}
-                <span
-                  className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-bold border flex items-center gap-1 ${
-                    stock > 0
-                      ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-400'
-                      : 'bg-rose-950/80 border-rose-500/50 text-rose-400'
-                  }`}
-                >
+                {/* Stock badge */}
+                <span className={`absolute top-2 right-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold border flex items-center gap-1 ${stock > 0 ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-400' : 'bg-rose-950/80 border-rose-500/50 text-rose-400'}`}>
                   <span className={`w-1 h-1 rounded-full ${stock > 0 ? 'bg-emerald-400 animate-ping' : 'bg-rose-400'}`} />
-                  {stock > 0 ? `${stock}` : '0'}
+                  {stock > 0 ? stock : '0'}
                 </span>
 
-                {/* Big brand icon */}
-                <div className="relative z-10 flex flex-col items-center gap-1">
-                  <div
-                    className="p-2.5 rounded-2xl border"
-                    style={{
-                      background: cfg.accent + '20',
-                      borderColor: cfg.accent + '45',
-                      boxShadow: `0 0 20px ${cfg.glow}`,
-                    }}
-                  >
-                    {getBrandIcon(prod.brand, 'w-8 h-8')}
+                {/* Brand icon */}
+                <div className="relative z-10">
+                  <div className="p-2.5 rounded-2xl border" style={{ background: cfg.accent + '20', borderColor: cfg.accent + '45', boxShadow: `0 0 18px ${cfg.glow}` }}>
+                    {getBrandIcon(prod.brand)}
                   </div>
                 </div>
 
-                {/* Hover hint */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <span className="text-white text-[10px] font-bold bg-black/50 px-2.5 py-1 rounded-full">
-                    Ver Detalle
-                  </span>
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span className="text-white text-[10px] font-bold bg-black/60 px-2.5 py-1 rounded-full">Ver Detalle</span>
                 </div>
               </div>
 
-              {/* ── Card Body ── */}
+              {/* Card body */}
               <div className="flex flex-col flex-1 p-3 space-y-2">
-
-                {/* Product name */}
-                <h3 className="font-bold text-xs text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition">
+                <h3 className="font-bold text-[11px] text-white leading-snug line-clamp-2 group-hover:text-indigo-300 transition">
                   {prod.name}
                 </h3>
-
-                {/* Duration */}
                 <span className="text-[9px] text-slate-500 flex items-center gap-1">
                   <Clock className="w-2.5 h-2.5" /> {prod.duration_days} días
                 </span>
 
-                {/* Price */}
+                {/* Price + margin */}
                 <div className="flex items-baseline justify-between mt-auto pt-1">
                   <span className="text-sm font-mono font-extrabold text-white">
                     ${prod.reseller_price.toLocaleString('es-CO')}
@@ -584,7 +455,7 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({
                   <span className="text-[10px] font-bold text-emerald-400">+{profitPct}%</span>
                 </div>
 
-                {/* Action buttons */}
+                {/* Buttons */}
                 <div className="flex gap-1.5 pt-1">
                   <button
                     onClick={() => setDetailProduct(prod)}
@@ -595,18 +466,9 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({
                   <button
                     onClick={() => handleAdd(prod)}
                     disabled={stock === 0}
-                    className={`flex-[2] py-2 rounded-xl font-bold text-[10px] flex items-center justify-center gap-1 transition ${
-                      stock === 0
-                        ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed'
-                        : isAdded
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'
-                    }`}
+                    className={`flex-[2] py-2 rounded-xl font-bold text-[10px] flex items-center justify-center gap-1 transition ${stock === 0 ? 'bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed' : isAdded ? 'bg-emerald-600 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95'}`}
                   >
-                    {isAdded
-                      ? <><Check className="w-3 h-3" /> Listo</>
-                      : <><ShoppingCart className="w-3 h-3" /> {stock === 0 ? 'Agotado' : 'Carrito'}</>
-                    }
+                    {isAdded ? <><Check className="w-3 h-3" /> Listo</> : <><ShoppingCart className="w-3 h-3" /> {stock === 0 ? 'Agotado' : 'Carrito'}</>}
                   </button>
                 </div>
               </div>
@@ -623,7 +485,7 @@ export const CatalogTab: React.FC<CatalogTabProps> = ({
         </div>
       )}
 
-      {/* ── Detail Overlay ── */}
+      {/* Detail overlay */}
       {detailProduct && (
         <DetailOverlay
           product={detailProduct}

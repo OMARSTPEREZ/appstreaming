@@ -11,11 +11,11 @@ export interface Profile {
 }
 
 export type ProductCategory =
-  | 'Perfiles / Pantallas'
-  | 'Cuentas Completas'
+  | 'Streaming'
+  | 'IPTV & TV'
+  | 'Música & Vídeo'
   | 'Combos Especiales'
-  | 'Licencias Digitales'
-  | 'Música y Entretenimiento';
+  | 'Licencias Digitales';
 
 export interface Product {
   id: string;
