@@ -74,7 +74,7 @@ export interface Sale {
   expires_at: string;
 }
 
-export type PaymentGateway = 'wompi' | 'pse' | 'bancolombia' | 'binance_usdt' | 'manual';
+export type PaymentGateway = 'nequi' | 'daviplata' | 'pse' | 'llave' | 'wompi' | 'bancolombia' | 'binance_usdt' | 'manual';
 export type TopupStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Topup {

@@ -95,70 +95,80 @@ export const TopupModal: React.FC<TopupModalProps> = ({ isOpen, onClose, onConfi
             {/* Selector de pasarela */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-2">
-                Método de Pago:
+                Método de Pago Directo:
               </label>
               <div className="grid grid-cols-2 gap-2">
+                {/* NEQUI */}
                 <button
                   type="button"
-                  onClick={() => setGateway('wompi')}
-                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition ${
-                    gateway === 'wompi'
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-300'
+                  onClick={() => setGateway('nequi')}
+                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition cursor-pointer ${
+                    gateway === 'nequi'
+                      ? 'bg-fuchsia-950/40 border-fuchsia-500 text-white shadow-lg shadow-fuchsia-500/20'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  <CreditCard className="w-5 h-5 text-indigo-400 flex-shrink-0" />
+                  <div className="w-8 h-8 rounded-lg bg-[#E5007D]/20 text-[#E5007D] flex items-center justify-center border border-[#E5007D]/30 flex-shrink-0 font-black text-xs">
+                    N
+                  </div>
                   <div>
-                    <span className="font-semibold text-xs block text-slate-200">Wompi / Tarjetas</span>
-                    <span className="text-[10px] text-slate-500">Débito / Crédito</span>
+                    <span className="font-semibold text-xs block text-slate-200">Nequi Directo</span>
+                    <span className="text-[10px] text-fuchsia-400">QR & Celular</span>
                   </div>
                 </button>
 
+                {/* DAVIPLATA */}
+                <button
+                  type="button"
+                  onClick={() => setGateway('daviplata')}
+                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition cursor-pointer ${
+                    gateway === 'daviplata'
+                      ? 'bg-rose-950/40 border-rose-500 text-white shadow-lg shadow-rose-500/20'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#ED1C24]/20 text-[#ED1C24] flex items-center justify-center border border-[#ED1C24]/30 flex-shrink-0 font-black text-xs">
+                    D
+                  </div>
+                  <div>
+                    <span className="font-semibold text-xs block text-slate-200">Daviplata</span>
+                    <span className="text-[10px] text-rose-400">Transferencia Directa</span>
+                  </div>
+                </button>
+
+                {/* PSE */}
                 <button
                   type="button"
                   onClick={() => setGateway('pse')}
-                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition ${
+                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition cursor-pointer ${
                     gateway === 'pse'
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-300'
+                      ? 'bg-emerald-950/40 border-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  <Building className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <Building className="w-8 h-8 p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex-shrink-0" />
                   <div>
                     <span className="font-semibold text-xs block text-slate-200">PSE Bancos</span>
-                    <span className="text-[10px] text-slate-500">Cuentas Colombia</span>
+                    <span className="text-[10px] text-emerald-400">Todos los Bancos</span>
                   </div>
                 </button>
 
+                {/* LLAVE / TRANSFIYA */}
                 <button
                   type="button"
-                  onClick={() => setGateway('bancolombia')}
-                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition ${
-                    gateway === 'bancolombia'
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-300'
+                  onClick={() => setGateway('llave')}
+                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition cursor-pointer ${
+                    gateway === 'llave'
+                      ? 'bg-indigo-950/40 border-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  <QrCode className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <div>
-                    <span className="font-semibold text-xs block text-slate-200">Bancolombia QR</span>
-                    <span className="text-[10px] text-slate-500">App Bancolombia</span>
+                  <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30 flex-shrink-0 font-bold text-xs">
+                    🔑
                   </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setGateway('binance_usdt')}
-                  className={`p-3 rounded-xl border flex items-center gap-2.5 text-left transition ${
-                    gateway === 'binance_usdt'
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-300'
-                  }`}
-                >
-                  <Sparkles className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                   <div>
-                    <span className="font-semibold text-xs block text-slate-200">Binance Pay</span>
-                    <span className="text-[10px] text-slate-500">USDT Sin Comisión</span>
+                    <span className="font-semibold text-xs block text-slate-200">Llave / Transfiya</span>
+                    <span className="text-[10px] text-indigo-400">Inmediato Bre-B</span>
                   </div>
                 </button>
               </div>
